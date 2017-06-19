@@ -4,39 +4,15 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import java.awt.BorderLayout;
 import java.awt.Font;
-import java.awt.List;
-
-import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.io.PrintWriter;
-import java.nio.file.Files;
-import java.nio.file.InvalidPathException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Set;
-import java.util.zip.Inflater;
 import javax.swing.UIManager;
-
-import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.Collections;
-
-import javafx.concurrent.Task;
-
 import java.util.Timer;
 import java.util.TimerTask;
-
-import javax.swing.SwingConstants;
 import javax.swing.JLabel;
 
 public class MainProgram {
@@ -152,6 +128,11 @@ public class MainProgram {
         }
 	}*/
 	
+////////////////////////////////////////////////////////////////////////////////////////
+//Working Methods\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+////////////////////////////////////////////////////////////////////////////////////////
+
+	
 	private static boolean isCharUpperCase(char C){
 		if(( C >= 'A' && C <= 'Z') || C =='È' || C =='Æ' || C =='Ž' || C =='Ð' || C =='Š' )
 			return true;
@@ -159,12 +140,14 @@ public class MainProgram {
 			return false;
 	}
 	
+	
 	private static boolean isCharLowerCase(char C){
 		if(( C >= 'a' && C <= 'z') || C =='è' || C =='æ' || C =='ž' || C =='ð' || C =='š' )
 			return true;
 		else
 			return false;
 	}
+	
 	
 	private static String inverseFirstChar(String word){
 		if( word.length()>0 ){
@@ -178,6 +161,7 @@ public class MainProgram {
 			return null;
 	}
 	
+	
 	private static String inverseLastChar(String word){
 		if( word.length()>0 ){
 			if ( isCharLowerCase(word.charAt( word.length()-1) ) ) {
@@ -189,6 +173,7 @@ public class MainProgram {
 		}else
 			return null;
 	}
+	
 	
 	private static String inverseCharAtX( String word , int x ){
 		if( word.length()>0 && word.length() >= x && x>0){
@@ -212,9 +197,11 @@ public class MainProgram {
 		txtrLog.append(getMemoryUsageString());
 	}
 	
+	
 	private static String getMemoryUsageString(){
 		return ("KB: " + Long.toString(getMemoryUsageLong() ) );
 	}
+	
 	
 	private static long getMemoryUsageLong(){
 		return ( Runtime.getRuntime().totalMemory()/1024 );
@@ -233,7 +220,19 @@ public class MainProgram {
 
 	}
 	
-	 static void printArr(String a[], int n)
+	
+	//Method to clear list (.clear leaves memory footprint for the largest element, meaning N*nullElements)
+		private static ArrayList<String> clearList() {
+			   ArrayList<String> newList = new ArrayList<String>();
+			   return newList;
+		}
+	
+////////////////////////////////////////////////////////////////////////////////////////
+//Testing Methods\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+////////////////////////////////////////////////////////////////////////////////////////
+	
+	//Helper for heapPermutation
+	static void printStringArray(String a[], int n)
 	    {
 	        for (int i=0; i<n; i++)
 	        	 out.print(String.valueOf(a[i]));
@@ -241,12 +240,13 @@ public class MainProgram {
 	        test++;
 	    }
 	
+	
 	 //Complexity is N! where N is num of words
 	 static void heapPermutation(String a[], int size, int n){
 	        // if size becomes 1 then prints the obtained
 	        // permutation
 	        if (size == 1)
-	            printArr(a,n);
+	        	printStringArray(a,n);
 	 
 	        for (int i=0; i<size; i++){
 	            heapPermutation(a, size-1, n);
@@ -268,10 +268,8 @@ public class MainProgram {
 	            }
 	        }
 	    }
-	 
 	
-	
-	
+	 //Helper for heapTest4
 	 static void printArrTest(int a[], int n)
 	    {
 	        for (int i=0; i<n; i++)
@@ -311,7 +309,7 @@ public class MainProgram {
 	        }
 	    }
 
-	/////////////////////////
+	 
 	//Generates all subsets of inputed string WITHOUT duplicates
 	//Char set more efficient than String set 
 	public static void subsetsCharacters(String s, int maxLength) {
@@ -326,13 +324,14 @@ public class MainProgram {
 			txtrLog.append("Can't find permutations! Error in string length!\n");
 	    }
 	
-	
+	//Helper for subsetsCharacters
 	private static void swapChars(char[] a, int i, int j) {
         char c = a[i];
         a[i] = a[j];
         a[j] = c;
     }
 	
+	//Main helper for subsetsCharacters
 	private static void permChars(char[] a, int n) {
 		if (n == 1) {
 			//generatedWords.add( String.valueOf(a) );
@@ -357,17 +356,7 @@ public class MainProgram {
 		}
     }
 	
-//////////////////////////
-//////////////////////////
 	
-	
-//Method to clear list (.clear leaves memory footprint for the largest element, meaning N*nullElements)
-	private static ArrayList<String> clearList() {
-		   ArrayList<String> newList = new ArrayList<String>();
-		   return newList;
-		}
-	
-
 
 	/**
 	 * Initialize the contents of the frame.
@@ -551,8 +540,8 @@ public class MainProgram {
 			frmDecypherInStyle.getContentPane().add(textCurrentMemUsage);
 			
 			JTextArea txtrT = new JTextArea();
+			txtrT.setToolTipText("Example: \\\\sbc\"1234567890AAa\" \\\\sec\"1234567890AAa\"");
 			txtrT.setFont(new Font("Monospaced", Font.PLAIN, 12));
-			txtrT.setText("\\\\sbc\"1234567890AAa\" \\\\sec\"1234567890AAa\"");
 			txtrT.setBounds(124, 179, 640, 22);
 			frmDecypherInStyle.getContentPane().add(txtrT);
 			
