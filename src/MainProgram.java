@@ -4,6 +4,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import java.awt.BorderLayout;
 import java.awt.Font;
+
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -14,6 +16,7 @@ import javax.swing.UIManager;
 import java.util.Timer;
 import java.util.TimerTask;
 import javax.swing.JLabel;
+import java.awt.Color;
 
 public class MainProgram {
 
@@ -149,6 +152,7 @@ public class MainProgram {
 	}
 	
 	
+	//3 methods below, where they return null that is to avoid duplicate entries
 	private static String inverseFirstChar(String word){
 		if( word.length()>0 ){
 			if ( isCharLowerCase(word.charAt(0)) ) {
@@ -156,12 +160,13 @@ public class MainProgram {
 			}else if ( isCharUpperCase(word.charAt(0)) ) {
 				return word.substring(0, 1).toLowerCase() + word.substring(1);
 			}else
-				return word; //for numbers
+				return null; //for numbers
 		}else
 			return null;
 	}
 	
 	
+	//Newline \n shouldn't be in string word
 	private static String inverseLastChar(String word){
 		if( word.length()>0 ){
 			if ( isCharLowerCase(word.charAt( word.length()-1) ) ) {
@@ -169,7 +174,7 @@ public class MainProgram {
 			}else if ( isCharUpperCase(word.charAt( word.length()-1 ) ) ) {
 				return word.substring( 0, word.length()-1 )  + word.substring( word.length()-1, word.length() ).toLowerCase();
 			}else
-				return word; //for numbers
+				return null; //for numbers
 		}else
 			return null;
 	}
@@ -182,7 +187,7 @@ public class MainProgram {
 			}else if ( isCharUpperCase(word.charAt( x-1 ) ) ) {
 				return word.substring( 0, x-1 )  + word.substring( x-1, x ).toLowerCase() + word.substring( x, word.length() );
 			}else
-				return word; //for numbers
+				return null; //for numbers
 		}else if(x<1){
 			txtrLog.append("[ERROR] X has to be higher that 0!\n");
 			return null;
@@ -214,7 +219,7 @@ public class MainProgram {
 			  @Override
 			  public void run() {
 				  textCurrentMemUsage.setText(getMemoryUsageString());
-					System.out.println(intervalSeconds+"s");
+				  System.out.println(intervalSeconds+"s");
 			  }
 			}, 0, intervalSeconds*1000);
 
@@ -232,17 +237,18 @@ public class MainProgram {
 ////////////////////////////////////////////////////////////////////////////////////////
 	
 	//Helper for heapPermutation
-	static void printStringArray(String a[], int n)
-	    {
-	        for (int i=0; i<n; i++)
-	        	 out.print(String.valueOf(a[i]));
-	        out.println("");
-	        test++;
-	    }
+	static void printStringArray(String a[], int n){
+		for (int i=0; i<3; i++)
+			txtrLog.append(String.valueOf(a[i]));
+		txtrLog.append("\n");
+		test++;
+	}
 	
 	
 	 //Complexity is N! where N is num of words
-	 static void heapPermutation(String a[], int size, int n){
+	//N is maximum resulting length of string, if its smaller then size.length duplicates will occur(n is just used in printing string)
+	//size is number of words to include in permutation example input "abc","123","!?!" and size=2 will make permutations for "abc" and "123" 
+	static void heapPermutation(String a[], int size, int n){
 	        // if size becomes 1 then prints the obtained
 	        // permutation
 	        if (size == 1)
@@ -269,49 +275,13 @@ public class MainProgram {
 	        }
 	    }
 	
-	 //Helper for heapTest4
-	 static void printArrTest(int a[], int n)
-	    {
-	        for (int i=0; i<n; i++)
-	        out.print(String.valueOf(a[i]));
-	        out.println("");
-	        //txtrLog.append("\n");
-	    }
 	 
-	 static void heapTest4(int a[], int size, int n)
-	    {
-	        // if size becomes 1 then prints the obtained
-	        // permutation
-	        if (size == 1)
-	            printArrTest(a,n);
 	 
-	        for (int i=0; i<size; i++)
-	        {
-	        	heapTest4(a, size-1, n);
-	 
-	            // if size is odd, swap first and last
-	            // element
-	            if (size % 2 == 1)
-	            {
-	                int temp = a[0];
-	                a[0] = a[size-1];
-	                a[size-1] = temp;
-	            }
-	 
-	            // If size is even, swap ith and last
-	            // element
-	            else
-	            {
-	                int temp = a[i];
-	                a[i] = a[size-1];
-	                a[size-1] = temp;
-	            }
-	        }
-	    }
-
 	 
 	//Generates all subsets of inputed string WITHOUT duplicates
 	//Char set more efficient than String set 
+	//maxLength is number of character to permute , example ("1234",3) would only permute first 3 chars "123" creating 6 words 
+	 //Complexity N! where N is num of chars
 	public static void subsetsCharacters(String s, int maxLength) {
 		if( maxLength>12 ){
 			txtrLog.append("[ERROR] Word length is larger then 12! \n");
@@ -335,9 +305,8 @@ public class MainProgram {
 	private static void permChars(char[] a, int n) {
 		if (n == 1) {
 			//generatedWords.add( String.valueOf(a) );
-			
-			out.println(String.valueOf(a));
-			test++;
+			//System.out.println(String.valueOf(a));
+			//test++;
 		    return;
 		}
 		for (int i = n; i < a.length; i++) {
@@ -357,6 +326,23 @@ public class MainProgram {
     }
 	
 	
+	
+	private static void generateInputListFromOptions(){
+		for(int i=0;i<lowerCaseWords.size();i++){
+			for(int j=0;j<upperCaseWords.size();j++){
+				
+			}
+		}
+		
+	}
+	
+	
+	private static void printWorkingList(){
+		txtrLog.append("Started printing working list:\n");
+		for(int i=0;i<workingWords.size();i++)
+			txtrLog.append(workingWords.get(i)+"\n");
+		txtrLog.append("Ended printing working list.\n");
+	}
 
 	/**
 	 * Initialize the contents of the frame.
@@ -364,7 +350,7 @@ public class MainProgram {
 	private static void initialize() {
 		//Set up the window
 			frmDecypherInStyle = new JFrame();
-			frmDecypherInStyle.getContentPane().setBackground(UIManager.getColor("Button.background"));
+			frmDecypherInStyle.getContentPane().setBackground(Color.DARK_GRAY);
 			frmDecypherInStyle.setResizable(false);
 			frmDecypherInStyle.setTitle("Hackerman");
 			frmDecypherInStyle.setBounds(100, 100, 780, 580);
@@ -373,6 +359,7 @@ public class MainProgram {
 			
 		//Add text label
 			JLabel txtEnter = new JLabel();
+			txtEnter.setForeground(Color.WHITE);
 			txtEnter.setFont(new Font("Tahoma", Font.PLAIN, 11));
 			txtEnter.setBounds(14, 11, 330, 18);
 			txtEnter.setText("Enter set of possible words with space in between:");
@@ -381,6 +368,7 @@ public class MainProgram {
 			
 		//Add text log in form of JTextArea
 			txtrLog = new JTextArea();
+			txtrLog.setBackground(Color.LIGHT_GRAY);
 			txtrLog.append("Log:\n");
 			txtrLog.setLineWrap(true);
 			txtrLog.setEditable(false);
@@ -411,6 +399,8 @@ public class MainProgram {
 			
 		//Add JTextArea for inputting words
 			txtWords = new JTextArea();
+			txtWords.setForeground(Color.BLACK);
+			txtWords.setBackground(Color.LIGHT_GRAY);
 			scrollPane.setViewportView(txtWords);
 			txtWords.setFont(new Font("Monospaced", Font.PLAIN, 12));
 			txtWords.setLineWrap(true);
@@ -418,6 +408,8 @@ public class MainProgram {
 			
 		//Add button that clears inputed words
 			JButton btnClearWords = new JButton("Clear Words");
+			btnClearWords.setForeground(Color.BLACK);
+			
 			btnClearWords.setFont(new Font("Tahoma", Font.PLAIN, 11));
 			btnClearWords.addMouseListener(new MouseAdapter() {
 				@Override
@@ -427,6 +419,13 @@ public class MainProgram {
 				}
 			});
 			btnClearWords.setBounds(624, 6, 140, 20);
+			//btnClearWords.setBackground(Color.red);
+			//btnClearWords.setOpaque(true);
+			//btnClearWords.setBorderPainted(true);
+			//btnClearWords.setContentAreaFilled(false);
+			//ImageIcon icon = new ImageIcon(basePath+"\\src\\btn1.png");
+			//txtrLog.append("Save path location: "+basePath+"\\src\\btn1.png"+"\n");
+			//btnClearWords.setIcon(icon);
 			frmDecypherInStyle.getContentPane().add(btnClearWords);	
 			
 		//Add button that clears log
@@ -470,8 +469,11 @@ public class MainProgram {
 
 						
 						//Start
-						txtrLog.append("[INFO]-->Hack in progress!\n");
+						//txtrLog.append("[INFO]-->Hack in progress!\n");
 						getWordsToString();
+						printWorkingList();
+						generateInputListFromOptions();
+						printWorkingList();
 						//generateLowerCaseCombinations();
 						//charPermutationOfAllWords("","1234");
 						//txtrLog.append("Permutation in progress!\n");
@@ -482,15 +484,15 @@ public class MainProgram {
 						long memoryEnd;
 						
 						//4th method
-						
+						/*
 						txtrLog.append("4th method:\n");
 						startTime = System.nanoTime();
 						memoryStart = getMemoryUsageLong();
 						out = new PrintWriter("filename.txt");
 						//subsetsCharacters("123456789012", 12);
 						int a[] = {1,2,3,4,5,6,7,8,9,0,1};
-						String b[] = {"1","2","3","4","5","6","7","8","9","0","1"};
-						heapPermutation( b, b.length,b.length);
+						String b[] = {"1","2","3","4"};
+						//heapPermutation( b, b.length,b.length);
 						out.close();
 						endTime = System.nanoTime();
 						memoryEnd = getMemoryUsageLong();
@@ -505,15 +507,7 @@ public class MainProgram {
 						//for(int i=0;i<generatedWords.size();i++)
 						//	txtrLog.append( String.valueOf(generatedWords.get(i) )+"\n");
 						txtrLog.append( "Generated words:"+test +"\n"); 
-						
-						///txtrLog.append( ipX("1" , 1) );
-						//txtrLog.append( ipX("1Ž" , 2) );
-						//txtrLog.append( ipX("23", 2) );
-						//txtrLog.append( ipX("ESTÐ", 3) );
-						//txtrLog.append( ipX("estÐ" , 3) );
-						//txtrLog.append( ipX("Ð" ,2) );
-						//txtrLog.append( ipX("ð" , 0) );
-						
+						*/
 					}catch (Exception e1) {
 						txtrLog.append("\n[ERROR]-->"+e1+"\n");
 					}
@@ -523,6 +517,7 @@ public class MainProgram {
 			frmDecypherInStyle.getContentPane().add(btnHack);
 			
 			JLabel txtrOptions = new JLabel();
+			txtrOptions.setForeground(Color.WHITE);
 			txtrOptions.setText("Universal options:");
 			txtrOptions.setOpaque(false);
 			txtrOptions.setFont(new Font("Tahoma", Font.PLAIN, 11));
@@ -530,37 +525,44 @@ public class MainProgram {
 			frmDecypherInStyle.getContentPane().add(txtrOptions);
 			
 			JLabel lblMemoryUsage = new JLabel("Current RAM usage:");
+			lblMemoryUsage.setForeground(Color.WHITE);
 			lblMemoryUsage.setFont(new Font("Tahoma", Font.PLAIN, 11));
 			lblMemoryUsage.setBounds(624, 240, 140, 14);
 			frmDecypherInStyle.getContentPane().add(lblMemoryUsage);
 			
 			textCurrentMemUsage = new JLabel("KB:");
+			textCurrentMemUsage.setForeground(Color.WHITE);
 			textCurrentMemUsage.setFont(new Font("Monospaced", Font.PLAIN, 14));
 			textCurrentMemUsage.setBounds(624, 264, 140, 25);
 			frmDecypherInStyle.getContentPane().add(textCurrentMemUsage);
 			
 			JTextArea txtrT = new JTextArea();
+			txtrT.setBackground(Color.LIGHT_GRAY);
 			txtrT.setToolTipText("Example: \\\\sbc\"1234567890AAa\" \\\\sec\"1234567890AAa\"");
 			txtrT.setFont(new Font("Monospaced", Font.PLAIN, 12));
 			txtrT.setBounds(124, 179, 640, 22);
 			frmDecypherInStyle.getContentPane().add(txtrT);
 			
 			JLabel lblAlgorithmComplexity = new JLabel("Algorithm complexity:");
+			lblAlgorithmComplexity.setForeground(Color.WHITE);
 			lblAlgorithmComplexity.setFont(new Font("Tahoma", Font.PLAIN, 11));
 			lblAlgorithmComplexity.setBounds(14, 208, 110, 14);
 			frmDecypherInStyle.getContentPane().add(lblAlgorithmComplexity);
 			
 			JLabel txtComplexity = new JLabel("Very High: O(N!*2N+300*N^2)");
+			txtComplexity.setForeground(Color.WHITE);
 			txtComplexity.setFont(new Font("Monospaced", Font.PLAIN, 14));
 			txtComplexity.setBounds(124, 204, 640, 25);
 			frmDecypherInStyle.getContentPane().add(txtComplexity);
 			
 			JLabel lblEstimatedMemoryUsage = new JLabel("Estimated filesize on disk:");
+			lblEstimatedMemoryUsage.setForeground(Color.WHITE);
 			lblEstimatedMemoryUsage.setFont(new Font("Tahoma", Font.PLAIN, 11));
 			lblEstimatedMemoryUsage.setBounds(624, 300, 140, 14);
 			frmDecypherInStyle.getContentPane().add(lblEstimatedMemoryUsage);
 			
 			JLabel txtEstimatedMemUsage = new JLabel("KB:");
+			txtEstimatedMemUsage.setForeground(Color.WHITE);
 			txtEstimatedMemUsage.setFont(new Font("Monospaced", Font.PLAIN, 14));
 			txtEstimatedMemUsage.setBounds(624, 324, 140, 25);
 			frmDecypherInStyle.getContentPane().add(txtEstimatedMemUsage);
@@ -569,10 +571,7 @@ public class MainProgram {
 			btnRefreshVariables.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseReleased(MouseEvent arg0) {
-					 String a[] = {"sad","sam","od","najebo"};
-					//heapPermutation(workingWords, workingWords.size(), workingWords.size());
-					txtrLog.append("Test:"+test+"\n");
-					txtrLog.append("Done!"+"\n");
+					
 				}
 			});
 			btnRefreshVariables.setFont(new Font("Tahoma", Font.PLAIN, 11));
