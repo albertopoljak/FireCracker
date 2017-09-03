@@ -16,6 +16,7 @@ App is still in the making.
 ### Prerequisites
 
 For running app you will need JRE installed:
+
 http://www.oracle.com/technetwork/java/javase/downloads/jre8-downloads-2133155.html
 
 ## Usage
