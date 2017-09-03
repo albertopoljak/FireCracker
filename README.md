@@ -21,16 +21,13 @@ http://www.oracle.com/technetwork/java/javase/downloads/jre8-downloads-2133155.h
 
 ## Usage
 
-Detailed explained inside program by clicking "Info".
+For extensive usage info read the [Wiki](https://github.com/albertopoljak/Word-List/wiki)
+
+Also usage is detailed explained inside the program by clicking "Info".
 	
 ## Authors
 
 Alberto Poljak
-
-## Resources
-
-Picture: Kung Fury Hackerman
-	Song: Lost Years - West Side Lane
 
 ## License
 
