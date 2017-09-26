@@ -1,3 +1,4 @@
+package main.methods;
 
 /*
  * Methods optimized to save RAM. 

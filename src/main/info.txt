@@ -1,0 +1,136 @@
+1. Explained program use
+2. Explained settings
+
+1.
+Enter all possible words, choose word options and click Hack!
+Program will make a wordlist.txt file inside directory of this exe.
+
+Usage examples:
+a) You know the words but you can't remember in which order they go
+b) You know all the letters in the word but can't remember in which order they go
+c) Combination of a and b
+d) Special casses and combining input
+e) Combining input
+f) Universal options
+
+Explanation:
+a) Lets say that your password which you forgot is  "Best123PasswordEver" , and you can still recall the words "Best" , "Ever" , "Password" and "123" but you don't know the combination!
+So instead of trying N! combinations, in this case 4!=24 combinations, and guessing manually like 123BestPasswordEver, BestPasswordEver123, PasswordBest123Ever....  you just type those words in this program and voila!
+It will generate all 24 possible combinations and one of those will for sure be exactly "Best123PasswordEver".
+This becomes expecially usefull if you have many words because number of combinations is N! so for 10 words it would be 10!=3628800 combinations!
+Note that this can consume a lot of memory! Formula for max memory is:  N! * W * 2 / 1024 / 1024 MB
+Where N is number of words and W is maximum length of string.
+
+Example of input:
+Best Ever Password 123
+
+b) Lets say that your password which you forgot is  "AXBYCZ" , and you can still recall the letters 'A' , 'B' , 'C' , 'X' , 'Y' , 'Z'  but you don't know their combination!
+So instead of trying N! combinations, in this case 6!=720 combinations, and guessing manually like ABXYCZ , AXBCYZ , ABCZXY....  you just type those letters in this program and voila!
+It will generate all 720 possible combinations and one of those will for sure be exactly "AXBYCZ" 
+This becomes expecially usefull if you have many letters because number of combinations is N! so for 10 letters it would be 10!=3628800 combinations!
+Note that this can consume a lot of memory! Formula for memory is:  N! * W * 2 / 1024 / 1024 MB
+Where N is number of letters and W is length of password.
+
+Example of input:
+ABCXYZ\\b
+
+c) Combination of above 2; When you know all the words but some of the words are blury in your memory , for example:
+Your forgoten password is "DanceNight24135" and you still remember the words "Night" and "Dance" but for the third word you only remember that it had characters from 1-5.
+Your input would then be:
+Night Dance 12345\\b
+If you remember that "Night" and "Dance" went in this order "DanceNight" then just input:
+DanceNight 12345\\b
+
+d) Special casses
+
+In this casses the string double backslash is reserved! This means that you can't have a double backslash in your words.
+Example your password consists of words "red" , "\\" , "blue"
+In that case the second word will break the program. In order to fix this go to settings and change the:
+"Don't use backslash as option separator, use this instead:" to change the reserved backslash to another symbol!
+
+
+\\l  - Use the word in its lowercase
+	Example input: HORSE\\l FLY
+	Generated words: HORSEFLY , FLYHORSE ,horseFLY , FLYhorse 
+
+\\u  - Use the word in its upercase
+	Example input: horse\\u fly
+	Generated words: horsefly , flyhorse , HORSEfly , flyHORSE
+
+\\ipX - invert letter at specific position X (lower to uppper case and upper to lower case)
+	Example input: alah\\ip3 fly
+	Generated words: alahfly , flyalah , alAhfly  , flyalAh
+
+Could be useful if you don't remember whether the word started with a capital or not.
+In this example you remember that the word 'alah' was part of the password, but since it's a proper name and should be written as 'Alah' you can't remember did you put it as 'alah' or 'Alah'
+	Example input: alah\\ip1 fly
+	Generated words: alahfly , flyalah , Alahfly  , flyAlah
+
+Same goes when you need to include inverz case for the last character (for example you wrote 'alah' backwards):
+Example input: hala\\ip4 yloh
+	Generated words: halayloh , ylohhala , halAyloh , ylohhalA 
+
+Same goes when you need to include inverz case for specific letters:
+Example input: bamboozled\\ip1,4 again
+Generated words: bamboozledagain , againbamboozled, BamBoozledagain ,  againBamBoozled
+
+Note: You can add as many character positions as you want, example bamboozled\\ip1,2,3,4     as long as numbers are separated by comma and they aren't higher than word length. This way you can even include  inverz case for all letters and if you want to to do it faster just input \\ip0 
+	Example input: alah\\ip0 fly
+	Generated words: alahfly , flyalah , ALAHfly  , flyALAH
+
+
+\\ab"" - adds specific string to beggining of the word
+	Example input: horse\\ab"_" fly
+	Generated words: horsefly , flyhorse , _horsefly , fly_horse
+
+\\ae"" - adds specific string to the end of the word
+	Example input: horse\\ae"_" fly
+	Generated words: horsefly , flyhorse , horse_fly , flyhorse_
+
+e) Combining input
+When the word you forgot can be a completely different word.
+Example you think the password goes something like this: "lovejesus" ,but since you also have islamic roots you are unsure whenever it is "jesus" or "alah"
+So your input would be:
+love jesus+alah
+This would generate: lovejesus , lovealah
+
+Example: since those are proper names you are unsure whenever did you put a capital or not so your input would be:
+love jesus//ip1+alah//ip1
+This would generate: lovejesus , loveJesus,  lovealah, loveAlah
+
+Note: You can add as many different words as you wish with the command "+" but remember that every of those words can have its own separated options:
+Example input:
+love jesus//ip1+icecream
+This would generate: lovejesus , loveJesus , loveicecream
+
+f) Universal options
+These options only apply to ALREADY generated words.
+
+\\sb"%S"  - Add specific string %S at beginning of each generated word example:
+	Already generated words: Europe America Asia
+	Your input: \\s"Continent_"
+	Final generated words: Continent_Europe Continent_America Continent_Asia
+
+Note that original words will be overwritten by added string meaning that even if you had word "Europe" at beginning , that word will not appear in dictionary! Word "Continent_Europe " replaces it! If you want to preserve original words then your input would be: \\sbc"Continent_"  example:
+	Already generated words: Europe America Asia
+	Your input: \\sbc"Continent_"
+	Final generated words: Europe America Asia Continent_Europe Continent_America Continent_Asia
+
+
+\\se"%S"  - Add specific string %S at the end of each generated word example:
+	Already generated words: Europe America Asia
+	Your input: \\se"_Continent"
+	Final generated words:  Europe_Continent America_Continent Asia_Continent
+
+Note that original words will be overwritten by added string meaning that even if you had word "Europe" at beginning , that word will not appear in dictionary! Word "Europe_Continent " replaces it! If you want to preserve original words then your input would be: \\sec"_Continent"  example:
+	Already generated words: Europe America Asia
+	Your input: \\sec"_Continent"
+	Final generated words: Europe America Asia Europe_Continent America_Continent Asia_Continent
+
+
+
+
+2.
+"I have high RAM" - when the program starts it will save all the words into (possibly very huge) word array and only when it's done it will save that array to disk as a word list file. This approach consumes lmemory (higher the complexity higher the RAM usage) but it increases overall program perfomance and reduces execution time.
+
+"I have low RAM" - when the program starts instead of adding all the words into (possibly very huge) word array and then saving that array to disk it will save EACH word to disk file EACH time the word is generated. This approach doesn't consume lot of memory but it decreases overall program perfomance and increases execution time.
