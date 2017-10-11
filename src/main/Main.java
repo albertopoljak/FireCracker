@@ -3,7 +3,8 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import main.methods.Methods_Universal;
+import main.methods.Placeholder;
+import main.methods.Universal;
 import java.awt.BorderLayout;
 import java.awt.Font;
 import javax.swing.JButton;
@@ -15,6 +16,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import javax.swing.JLabel;
@@ -29,7 +31,7 @@ public class Main {
 	private static JLabel textCurrentMemUsage;
 	private static PrintWriter out;
 	private static Timer timer;
-	
+	public static int test = 0;
 
 	/**
 	 * Launch new screen.
@@ -60,229 +62,6 @@ public class Main {
 		autoMemoryDetection();
 	}
 
-	
-	
-////////////////////////////////////////////////////////////////////////////////////////
-//Working Methods\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-////////////////////////////////////////////////////////////////////////////////////////
-
-	private static void printMemoryUsageInInterval( int intervalSeconds){
-		timer = new Timer();
-		timer.scheduleAtFixedRate(new TimerTask() {
-			  @Override
-			  public void run() {
-				  textCurrentMemUsage.setText("MB: " + Methods_Universal.getMemoryUsageLong());
-			  }
-			}, 0, intervalSeconds*1000);
-
-	}
-
-	
-	public static void changeUpdateVariable(int newInterval){
-		timer.cancel();
-		if(newInterval>0)
-			printMemoryUsageInInterval(newInterval);
-	}	
-
-	
-	//Method to clear list (.clear leaves memory footprint for the largest element, meaning N*nullElements)
-	private static ArrayList<String> clearList() {
-		   ArrayList<String> newList = new ArrayList<String>();
-		   return newList;
-	}
-
-	
-	public static void log(String text){
-		txtrLog.append( text );
-	}
-
-	
-	public static void openPrintWriter(String filePath){
-		try {
-    	    out = new PrintWriter(new BufferedWriter(new FileWriter(filePath, true)));
-    	} catch (IOException e) {
-    		txtrLog.append("Error creating file for saving!\n"+e+"\n");
-    	}
-	}
-	
-	public static void closePrintWriter(){
-		if( out!=null )
-    	    out.close();
-	}
-
-	
-	public static void writeString(String write[]){
-		int n = write.length;
-		for (int i=0; i<n; i++)
-			out.print(write[i]);
-		out.println();
-	}	
-	
-	
-	//Methods for settings
-	public static void autoMemoryDetection(){
-		long maxMemory = Runtime.getRuntime().maxMemory()/1024/1024;
-		txtrLog.append("Max memory: "+maxMemory+"mb\n");
-		if(maxMemory<2000){
-			Settings.lowMemory = true;
-			txtrLog.append("Program is set to run on low memory (less that 2000mb).\n"
-					+ "This will affect program execution time but will reduce memory usage.\n"
-					+ "If the memory reduction is not enough and the program eats all the memory it will crash.\n"
-					+ "Run in 64bits to increase avaiable memory size (works only if you have more than 2gb RAM)\n");
-		}else
-			Settings.lowMemory = false;
-	}
-	
-
-	//Getters	
-	public static String getTxtWords(){
-		return txtWords.getText();
-	}
-	
-	
-////////////////////////////////////////////////////////////////////////////////////////
-//Testing Methods\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-////////////////////////////////////////////////////////////////////////////////////////	
-	
-	/*
-	//remove word so only options remain in this function (so that the you can type \\ in the word)
-	private static ArrayList<String> constructString(String input){
-		System.out.println("Word:"+input);
-		boolean b = false;		//for \\b and \\b\number option, This will create all combinations of strings (123 = 123, 231, 321 etc)
-		int bOption = 0;
-		boolean l = false;		//for "Use the word in its lowercase" option
-		boolean u = false;		//for "Use the word in its uppercase" option
-		boolean ipx = false;	//If you want to invert letter at specific position , ipX where x is position
-		StringBuilder ipxPositions = new StringBuilder();
-		boolean ab = false;		//adds specific string to beggining of the word, ab"string"
-		boolean ae = false;		//adds specific string to the end of the word, ae"string"
-		//Universal options
-		boolean sb = false;		//Add specific string %S at beginning of each generated word
-		boolean sbc = false;	//Add specific string %S at beginning of each generated word while keeping original words
-		boolean se = false;		//Add specific string %S at the end of each generated word
-		boolean sec = false;	//Add specific string %S at the end of each generated word while keeping original words
-		//Fail safe variable
-		boolean failed = false;
-		//Check if options exist
-		boolean optionExists = false;
-		
-		
-		//Check for options, have to make function manually in case of duplicate options
-		StringBuilder in = new StringBuilder(input);
-		for(int i = 0; i<in.length(); i++){
-			if( in.charAt(i) == '\\' && i+1<in.length() && in.charAt(i+1) == '\\' ){
-				//remove \\
-				in.deleteCharAt(i);
-				in.deleteCharAt(i);
-				if( i<in.length() ){
-					//Check options 
-					if( in.charAt(i) == 'b' ){
-						b = true;
-						//Check number options (\\b\0)
-						if( i+1<in.length() && in.charAt(i+1) == '\\' ){ 
-							if(i+2<in.length() && Character.isDigit(in.charAt(i+2))){
-									System.out.println("yaTEST");
-									StringBuilder tempNumber = new StringBuilder();
-									tempNumber.append(in.charAt(i+2));
-									//Check for second digit
-									if(i+3<in.length() && Character.isDigit(in.charAt(i+3)))
-										tempNumber.append(in.charAt(i+3));
-									//Convert string to number
-									bOption = Integer.parseInt(tempNumber.toString());
-							}else{
-								System.out.println("Invalid number option for \\b! Option should look like: \\\\b\\x where x is a one or two digit number");
-								failed = true;
-								break;
-							}	
-						}else
-							System.out.println("No number option for \\\\b found...");
-					}else if( in.charAt(i) == 'l' ){
-						l = true;
-					}else if( in.charAt(i) == 'u' ){
-						u = true;
-					}else if( in.charAt(i) == 'i' ){
-						if( i+1<in.length() && in.charAt(i+1) == 'p' ){
-								if( i+2<in.length() && Character.isDigit(in.charAt(i+2)) ){
-									ipx= true;
-									ipxPositions.append(in.charAt(i+2));
-									int k = 1;
-									while(i+3+k<in.length() && in.charAt(i+2+k)==','){
-											ipxPositions.append(in.charAt(i+3+k));
-											//For two or more digits
-											while( i+4+k<in.length() && Character.isDigit(in.charAt(i+4)) ){
-												ipxPositions.append(in.charAt(i+4+k));
-												k++;
-											}
-											k+=2;
-									}
-								}else{
-									System.out.println("Invalid option ip! Enter positions! example \\\\ip1");
-									failed = true;
-									break;
-								}	
-						}else{
-							System.out.println("Invalid option! Options with char i are: ipX");
-							failed = true;
-							break;
-						}
-							
-					}else{
-						System.out.println("Unrecognised option!");
-						failed = true;
-						break;
-					}
-						
-				}else{
-					System.out.println("Characters \\\\ were found but there is no option! ");
-					failed = true;
-					break;
-				}
-					
-					
-					
-			}
-		}
-		
-		//Fail safe check
-		try{
-			if(ipxPositions.toString()!=null && ipxPositions.toString().length()>0)
-				Integer.parseInt(ipxPositions.toString());
-		}catch(Exception e1){
-			System.out.println("Invalid option ipX! Invalid character position input!"+e1);
-			failed = true;
-		}
-		
-		
-		//test print
-		if(!failed && (b||l||u||ipx||ab||ae) ){
-			System.out.println("\nPrinting");
-			if(b){
-			System.out.println("b:"+b);
-			System.out.println("bOption:"+bOption);
-			}if(l)
-			System.out.println("l:"+l);
-			if(u)
-			System.out.println("u:"+u);
-			if(ipx){
-			System.out.println("ip:"+ipx);
-			System.out.println("ip:"+ipxPositions);
-			}if(ab)
-			System.out.println("ab:"+ab);
-			if(ae)
-			System.out.println("ae:"+ae);
-		}else
-			System.out.println("No options or failed to read them. Please input options correctly.");
-		
-		ArrayList<String> temp = new ArrayList<String>();
-		temp.add("Test");
-		temp.add("AAyy");
-		
-		//printArrayList(temp);
-		return temp;
-	}*/
-		
-
-
 
 	/**
 	 * Initialize the contents of the frame.
@@ -299,16 +78,16 @@ public class Main {
 			
 		//Add text label
 			JLabel txtEnter = new JLabel();
-			txtEnter.setForeground(Color.WHITE);
+			txtEnter.setForeground(Color.LIGHT_GRAY);
 			txtEnter.setFont(new Font("Tahoma", Font.PLAIN, 11));
 			txtEnter.setBounds(14, 11, 600, 18);
-			txtEnter.setText("Enter set of possible words with space in between (char space can be changed in options):");
+			txtEnter.setText("Enter set of possible words with space in between (char space can be changed in settings)");
 			txtEnter.setOpaque(false);
 			frmDecypherInStyle.getContentPane().add(txtEnter);
 			
 		//Add text log in form of JTextArea
 			txtrLog = new JTextArea();
-			txtrLog.setBackground(Color.LIGHT_GRAY);
+			txtrLog.setBackground(Color.GRAY);
 			txtrLog.append("Log:\n");
 			txtrLog.setLineWrap(true);
 			txtrLog.setEditable(false);
@@ -322,7 +101,10 @@ public class Main {
 			frmDecypherInStyle.getContentPane().add(sp, BorderLayout.CENTER);
 			
 		//Add button that gets relative path and updates log window
-			JButton btnGetSavePath = new JButton("Get save path");
+			JButton btnGetSavePath = new JButton("Print save path");
+			btnGetSavePath.setBackground(Color.DARK_GRAY);
+			btnGetSavePath.setForeground(Color.GRAY);
+			btnGetSavePath.setFocusPainted(false);
 			btnGetSavePath.setFont(new Font("Tahoma", Font.PLAIN, 11));
 			btnGetSavePath.addMouseListener(new MouseAdapter() {
 				@Override
@@ -348,28 +130,24 @@ public class Main {
 			
 		//Add button that clears inputed words
 			JButton btnClearWords = new JButton("Clear Words");
-			btnClearWords.setForeground(Color.BLACK);
-			
+			btnClearWords.setBackground(Color.DARK_GRAY);
+			btnClearWords.setForeground(Color.GRAY);
+			btnClearWords.setFocusPainted(false);
 			btnClearWords.setFont(new Font("Tahoma", Font.PLAIN, 11));
 			btnClearWords.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseReleased(MouseEvent e) {
-					//txtWords.setText("");
 					txtWords.setText("");
 				}
 			});
 			btnClearWords.setBounds(624, 6, 140, 20);
-			//btnClearWords.setBackground(Color.red);
-			//btnClearWords.setOpaque(true);
-			//btnClearWords.setBorderPainted(true);
-			//btnClearWords.setContentAreaFilled(false);
-			//ImageIcon icon = new ImageIcon(basePath+"\\src\\btn1.png");
-			//txtrLog.append("Save path location: "+basePath+"\\src\\btn1.png"+"\n");
-			//btnClearWords.setIcon(icon);
 			frmDecypherInStyle.getContentPane().add(btnClearWords);	
 			
 		//Add button that clears log
 			JButton btnClearLog = new JButton("Clear Log");
+			btnClearLog.setBackground(Color.DARK_GRAY);
+			btnClearLog.setForeground(Color.GRAY);
+			btnClearLog.setFocusPainted(false);
 			btnClearLog.setFont(new Font("Tahoma", Font.PLAIN, 11));
 			btnClearLog.addMouseListener(new MouseAdapter() {
 				@Override
@@ -382,7 +160,10 @@ public class Main {
 			frmDecypherInStyle.getContentPane().add(btnClearLog);
 		
 		//Add button that opens new window ("Info")
-			JButton btnInfo = new JButton("Info");
+			JButton btnInfo = new JButton("Help");
+			btnInfo.setBackground(Color.DARK_GRAY);
+			btnInfo.setForeground(Color.GRAY);
+			btnInfo.setFocusPainted(false);
 			btnInfo.setFont(new Font("Tahoma", Font.PLAIN, 11));
 			btnInfo.addMouseListener(new MouseAdapter() {
 				@Override
@@ -395,20 +176,32 @@ public class Main {
 					
 		//Add button that ?
 			JButton btnHack = new JButton("Hack!");
+			btnHack.setBackground(Color.DARK_GRAY);
+			btnHack.setForeground(Color.GRAY);
+			btnHack.setFocusPainted(false);
 			btnHack.setFont(new Font("Tahoma", Font.PLAIN, 11));
 			btnHack.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseReleased(MouseEvent e) {
-					openPrintWriter("wordList.txt");
-					closePrintWriter();
-					
+					try{
+						openPrintWriter("wordList.txt");
+						List<List<String>> tempOutput = new ArrayList<List<String>>();
+						tempOutput = buildWords( extractInput(txtWords.getText() , Settings.wordSeparator), Settings.wordCombine , Settings.optionSeparator ) ;
+						Placeholder.combinations2D( Universal.convertListToStringArray(tempOutput) );
+						closePrintWriter();
+						txtrLog.append("Test: "+test+"\n");
+						test=0;
+						
+					}catch(Exception exc){
+						txtrLog.append("Error: "+exc+"\n");
+					}
 				}
 			});
 			btnHack.setBounds(624, 507, 140, 33);
 			frmDecypherInStyle.getContentPane().add(btnHack);
 			
 			JLabel txtrOptions = new JLabel();
-			txtrOptions.setForeground(Color.WHITE);
+			txtrOptions.setForeground(Color.LIGHT_GRAY);
 			txtrOptions.setText("Universal options:");
 			txtrOptions.setOpaque(false);
 			txtrOptions.setFont(new Font("Tahoma", Font.PLAIN, 11));
@@ -416,14 +209,14 @@ public class Main {
 			frmDecypherInStyle.getContentPane().add(txtrOptions);
 			
 			JLabel lblMemoryUsage = new JLabel("Current RAM usage:");
-			lblMemoryUsage.setForeground(Color.WHITE);
+			lblMemoryUsage.setForeground(Color.LIGHT_GRAY);
 			lblMemoryUsage.setFont(new Font("Tahoma", Font.PLAIN, 11));
 			lblMemoryUsage.setBounds(624, 240, 140, 14);
 			frmDecypherInStyle.getContentPane().add(lblMemoryUsage);
 			
 			textCurrentMemUsage = new JLabel("MB:");
 			textCurrentMemUsage.setToolTipText("In short this is approximately the amount of RAM that this program uses. \r\nYou will not see changes in its usage until you pass a certain memory usage , then Java Virtual Mahine will automatically allocate more memory.");
-			textCurrentMemUsage.setForeground(Color.WHITE);
+			textCurrentMemUsage.setForeground(Color.LIGHT_GRAY);
 			textCurrentMemUsage.setFont(new Font("Monospaced", Font.PLAIN, 14));
 			textCurrentMemUsage.setBounds(624, 264, 140, 25);
 			frmDecypherInStyle.getContentPane().add(textCurrentMemUsage);
@@ -436,34 +229,37 @@ public class Main {
 			frmDecypherInStyle.getContentPane().add(txtrT);
 			
 			JLabel lblAlgorithmComplexity = new JLabel("Algorithm complexity:");
-			lblAlgorithmComplexity.setForeground(Color.WHITE);
+			lblAlgorithmComplexity.setForeground(Color.LIGHT_GRAY);
 			lblAlgorithmComplexity.setFont(new Font("Tahoma", Font.PLAIN, 11));
 			lblAlgorithmComplexity.setBounds(14, 208, 110, 14);
 			frmDecypherInStyle.getContentPane().add(lblAlgorithmComplexity);
 			
 			JLabel txtComplexity = new JLabel("Very High: O(N!*2N+300*N^2)");
-			txtComplexity.setForeground(Color.WHITE);
+			txtComplexity.setForeground(Color.LIGHT_GRAY);
 			txtComplexity.setFont(new Font("Monospaced", Font.PLAIN, 14));
 			txtComplexity.setBounds(124, 204, 640, 25);
 			frmDecypherInStyle.getContentPane().add(txtComplexity);
 			
 			JLabel lblEstimatedMemoryUsage = new JLabel("Estimated filesize on disk:");
-			lblEstimatedMemoryUsage.setForeground(Color.WHITE);
+			lblEstimatedMemoryUsage.setForeground(Color.LIGHT_GRAY);
 			lblEstimatedMemoryUsage.setFont(new Font("Tahoma", Font.PLAIN, 11));
 			lblEstimatedMemoryUsage.setBounds(624, 300, 140, 14);
 			frmDecypherInStyle.getContentPane().add(lblEstimatedMemoryUsage);
 			
 			JLabel txtEstimatedMemUsage = new JLabel("MB:");
-			txtEstimatedMemUsage.setForeground(Color.WHITE);
+			txtEstimatedMemUsage.setForeground(Color.LIGHT_GRAY);
 			txtEstimatedMemUsage.setFont(new Font("Monospaced", Font.PLAIN, 14));
 			txtEstimatedMemUsage.setBounds(624, 324, 140, 25);
 			frmDecypherInStyle.getContentPane().add(txtEstimatedMemUsage);
 			
 			JButton btnRefreshVariables = new JButton("Refresh variables");
+			btnRefreshVariables.setBackground(Color.DARK_GRAY);
+			btnRefreshVariables.setForeground(Color.GRAY);
+			btnRefreshVariables.setFocusPainted(false);
 			btnRefreshVariables.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseReleased(MouseEvent arg0) {
-					textCurrentMemUsage.setText("MB: " + Methods_Universal.getMemoryUsageLong());
+					textCurrentMemUsage.setText("MB: " + Universal.getMemoryUsageLong());
 					
 				}
 			});
@@ -472,6 +268,9 @@ public class Main {
 			frmDecypherInStyle.getContentPane().add(btnRefreshVariables);
 			
 			JButton btnSettings = new JButton("Settings");
+			btnSettings.setBackground(Color.DARK_GRAY);
+			btnSettings.setForeground(Color.GRAY);
+			btnSettings.setFocusPainted(false);
 			btnSettings.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseReleased(MouseEvent arg0) {
@@ -484,4 +283,357 @@ public class Main {
 			
 			
 	}
+	
+	
+	
+	
+////////////////////////////////////////////////////////////////////////////////////////
+//Working Methods\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+////////////////////////////////////////////////////////////////////////////////////////
+
+	private static void printMemoryUsageInInterval( int intervalSeconds){
+		timer = new Timer();
+		timer.scheduleAtFixedRate(new TimerTask() {
+			@Override
+			public void run() {
+				textCurrentMemUsage.setText("MB: " + Universal.getMemoryUsageLong());
+			}
+		}, 0, intervalSeconds*1000);
+	
+	}
+
+
+	public static void changeUpdateVariable(int newInterval){
+		timer.cancel();
+		if(newInterval>0)
+			printMemoryUsageInInterval(newInterval);
+	}	
+
+
+	//Method to clear list (.clear leaves memory footprint for the largest element, meaning N*nullElements)
+	private static ArrayList<String> clearList() {
+		ArrayList<String> newList = new ArrayList<String>();
+		return newList;
+	}
+
+
+	public static void log(String text){
+		txtrLog.append( text );
+	}
+
+
+	public static void openPrintWriter(String filePath) throws IOException{
+		try {
+			out = new PrintWriter(new BufferedWriter(new FileWriter(filePath, true)));
+		} catch (IOException e) {
+			txtrLog.append("Error creating file for saving!\n"+e+"\n");
+			throw new IOException(e);
+		}
+	}
+
+	public static void closePrintWriter(){
+		if( out!=null )
+			out.close();
+	}
+
+
+	public static void writeString(String write[]){
+		int n = write.length;
+		for (int i=0; i<n; i++)
+			out.print(write[i]);
+		out.println();
+	}	
+
+
+	//Methods for settings
+	public static void autoMemoryDetection(){
+		long maxMemory = Runtime.getRuntime().maxMemory()/1024/1024;
+		txtrLog.append("Max memory: "+maxMemory+"mb\n");
+		if(maxMemory<2000){
+			Settings.lowMemory = true;
+			txtrLog.append("Program is set to run on low memory (less that 2000mb).\n"
+					+ "This will affect program execution time but will reduce memory usage.\n"
+					+ "If the memory reduction is not enough and the program eats all the memory it will crash.\n"
+					+ "Run in 64bits to increase avaiable memory size (works only if you have more than 2gb RAM)\n");
+		}else
+			Settings.lowMemory = false;
+	}
+
+
+	//Getters	
+	public static String getTxtWords(){
+		return txtWords.getText();
+	}
+	
+	
+	
+	
+	/*Extract input (all words+their options) from string input and returns them as arrayList
+	 * char wordSeparator represents word separator example in string "cat dog jaguar" word separator would be char ' ' (space)
+	 */
+		 
+		private static ArrayList<String> extractInput(String input ,char wordSeparator){
+			ArrayList<String> returnedWords = new ArrayList<String>();
+			String tempWord = "";
+			if( input!=null && input.length()>0 ){
+				for( int i=0; i<input.length() ; i++){
+					char currentChar = input.charAt(i);
+					if( currentChar!=wordSeparator && currentChar!='\n' )
+						tempWord+=input.charAt(i);
+					else{
+						if(tempWord.length()>0)
+							returnedWords.add(tempWord);
+						else
+							txtrLog.append("Empty word, skipping...\n");
+						tempWord = "";
+					}
+				}
+				
+				//Add last word if there is NO newline at the end
+				if( input.charAt( input.length()-1 ) !='\n' )
+					returnedWords.add(tempWord);
+
+				///*Debug only*/ if( debug.isSelected() ) Log.log("Extracted words: "+Arrays.toString(returnedWords.toArray()));
+				txtrLog.append("\nExtracted words: "+Arrays.toString(returnedWords.toArray())+"\n");
+				
+				return returnedWords;
+				
+			}else{
+				txtrLog.append("Input is empty, nothing to return!");
+				return null;
+			}
+		}
+	
+		
+		
+		
+		
+		/*
+		 * Build words from options
+		 */
+		/*
+		 * NOTE:
+		 * Total number of generated words is: X * Y
+		 * Where X is number of words generated by combinations2D and Y same but from heapPermutation
+		 * Example: Input is {{"sad","SAD"},{"najebo","NAJEBO"},{"sam","SAM"},{"test","TEST", "Test", "ayy"}}
+		 * X would then be 2*2*2*4 = 32 
+		 * Y would be 4! (1*2*3*4) because we have 4 blocks (4 words that make a sentence)
+		 * Total = 768
+		 */	
+			
+		//int Y = inputWords.size(); daje nullPointer exception ako je input prazan		
+		private static List<List<String>> buildWords( ArrayList<String> inputWords , char combiningSeparator, char optionSeparator){
+			int i;
+			int X;
+			int Y = inputWords.size();
+			List<List<String>> tempOutput = new ArrayList<List<String>>();
+			
+			//Add Y words and start adding words and their options
+			for( i=0; i<Y; i++){
+				tempOutput.add(new ArrayList<String>());
+				extractWords( tempOutput, i, inputWords.get(i).toString(), combiningSeparator, optionSeparator );
+			}
+			
+			//tempOutput.get(0).add("foobar");
+			//temp Print
+			for( i=0; i<Y; i++){
+				StringBuilder builder = new StringBuilder();
+				for (String value : tempOutput.get(i)) {
+					txtrLog.append( "\n"+(i+1)+":"+value );
+				}
+			}
+			
+			return tempOutput;
+		}
+		
+		
+		
+		
+		/*
+		 * Extract words from string
+		 */
+		
+		public static void extractWords( List<List<String>> inputList , int index , String extractString , char combiningSeparator, char optionSeparator ){
+			String baseString;
+			String optionString;
+			int indexCombining = extractString.indexOf(combiningSeparator);
+
+			if( indexCombining!=-1 ){
+				/*
+				 * There is combining separator in string so we will break the word
+				 * in 2 parts and call this function again with each part
+				 */
+				txtrLog.append("There is combining separator in string!\n");
+			   String tempInput = extractString ;
+			   StringBuilder temp = new StringBuilder();
+			   for( int i=0; i<tempInput.length(); i++ ){
+				   if( tempInput.charAt(i)==combiningSeparator ){
+					   extractWords( inputList, index, temp.toString() , combiningSeparator, optionSeparator );
+					   temp = new StringBuilder();
+
+				   }else if( i==tempInput.length()-1 ){
+					   temp.append( tempInput.charAt(i) );
+					   extractWords( inputList, index, temp.toString() , combiningSeparator, optionSeparator );
+					   //temp = new StringBuilder();
+				   }else{
+					   temp.append( tempInput.charAt(i) );
+				   }
+			   }
+			   return;
+			}else{
+				/*
+				 * There is NO combining separator in word meaning word is single
+				 * Now we look if word has additional options or not
+				 */
+				int indexOption = extractString.indexOf(optionSeparator);
+				if( indexOption!=-1 ){
+					/*
+					 * There are options in the word so we will have to generate new words
+					 * based on those options and base string (which is an original word)
+					 */
+					baseString = extractString.substring(0, indexOption);
+					optionString = extractString.substring(indexOption);
+					inputList.get(index).add(baseString);
+					/*
+					 * Split option string to multiple parts then call function for every option part
+					 * We used optionSeparatorDouble because option separator is a double char in the program
+					 */
+					String optionSeparatorDouble = optionSeparator+""+optionSeparator;
+					String[] word = optionString.split(optionSeparatorDouble);
+					word = removeEmpty(word);
+					txtrLog.append("Printing word array:\n");
+					//for(int k =0; k<word.length;k++)
+					//	log.append(k+":"+word[k]+"\n");
+					
+						for(String optionPart: word){
+							/*
+							 * Eliminate empty words produced by optionString.split
+							 */
+							//log.append("Test:"+optionPart+"\n");
+							//if(!optionPart.isEmpty()){
+								/*
+								 * Before calling the option method first extract sub-options
+								 */
+							txtrLog.append("Spliting:'"+optionPart+"' to suboptions!\n");
+								String[] subOptions = optionPart.split( ""+optionSeparator );
+								/*
+								 * Now remove empty words from sub-options produced by optionString.split
+								 */
+								subOptions = removeEmpty(subOptions);
+								txtrLog.append("Resulting clear array:\n");
+								for(int k =0; k<subOptions.length;k++)
+									txtrLog.append(k+":"+subOptions[k]+"\n");
+								/*
+								 * String in first index of finalSubOptions is the option while rest are subOptions
+								 */
+								//log.append("baseString:"+baseString+" ,optionPart:"+optionPart+" , subOptions: (printed above)\n");
+								extractOptions( inputList, index, baseString, subOptions );
+							//}
+						}
+					return;
+				}else{
+					/*
+					 * There are no options in word so we just add it to the list
+					 */
+					txtrLog.append("No options in word!\n");
+					inputList.get(index).add(extractString);
+					return;
+				}
+			}
+			
+		}
+		
+		
+		
+		/*
+		 * Build options
+		 * optionString is already checked for empty in the previous method
+		 * String in first index of finalSubOptions is the option while rest are subOptions
+		 */
+		public static void extractOptions( List<List<String>> inputList , int index , String baseString, String[] subOptions ){
+			
+			//Potential error handling (some of this might not be needed)
+			if( !(subOptions.length>0) ) {
+				txtrLog.append("Options have been found for word "+baseString+" but program couldn't read them!\n"
+						+ "(length!>0)\n");
+				return;
+			}/*else if( subOptions.length==1 ) {
+				log.append("Options have been found for word "+baseString+" but program couldn't read them!\n"
+						+ "(length==1)\n");
+				return;
+			}*///Not needed?
+			
+			//Call functions based on found options
+			
+			switch (subOptions[0]) {
+	        case "b":
+	        	if( subOptions.length>1 ){
+	        		txtrLog.append("Option 'b' can't have suboptions! ("+subOptions[1]+" etc...)"+"\n");
+	        	}else{
+
+	        	}
+	        	break;
+	        case "l":
+	        	if( subOptions.length>1 ){
+	        		txtrLog.append("Option 'l' can't have suboptions! ("+subOptions[1]+" etc...)"+"\n");
+	        		break;
+	        	}else{
+	        		//inputList.get(index).add( baseString.toLowerCase() );
+	        	}
+	        	break;
+	        case "u":
+	        	if( subOptions.length>1 ){
+	        		txtrLog.append("Option 'u' can't have suboptions! ("+subOptions[1]+" etc...)"+"\n");
+	        		break;
+	        	}else{
+	        		inputList.get(index).add( baseString.toUpperCase() );
+	        	}
+	        	break;
+	        case "ip":
+	        	txtrLog.append("Option 'ip' is not curently in function! \n");
+	        	break;
+	        case "ab":
+	        	txtrLog.append("Option 'ab' is not curently in function! \n");
+	        	break;
+	        case "ae":
+	        	txtrLog.append("Option 'ae' is not curently in function! \n");
+	        	break;
+	        default:
+	        	txtrLog.append("ERROR: Can't find option '"+subOptions[0]+"' !\n");
+			}
+			
+			
+		}
+		
+		
+		/*
+		 * Eliminate empty words in string array
+		 * Words are considered empty if they are null or have 0 characters
+		 */
+		
+		public static String[] removeEmpty(String[] input){
+			List<String> list = new ArrayList<String>(Arrays.asList(input));
+			list.removeAll(Arrays.asList("", null));
+			return list.toArray(new String[0]);
+		}
+		
+		/*
+		/*
+		 * Convert List<List<String>> to String[][] 
+		 * Only temporal solution until method combinations2d is reworked so it can work with lists instead of arrays
+		 */
+		
+		public static String[][] convertListToStringArray( List<List<String>> theStrings ){
+			//List<List<String>> theStrings ... coming from somewhere
+			String[][] stringsAsArray = new String[theStrings.size()][];
+			for (int i=0; i<theStrings.size();i++) {
+			  List<String> aList = theStrings.get(i);
+			  stringsAsArray[i] = aList.toArray(new String[aList.size()]);
+			}
+			return stringsAsArray;
+		}
+		
+		
+	
+	
 }

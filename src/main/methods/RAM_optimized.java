@@ -1,11 +1,11 @@
 package main.methods;
 
 /*
- * Methods optimized to save RAM. 
+ * Methods optimized to reduce RAM usage 
  * These may be CPU and hard disk intensive.
  * 
  * */
 
-public class Methods_RAM {
+public class RAM_optimized {
 
 }

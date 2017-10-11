@@ -6,11 +6,12 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 import main.Info;
 import main.Main;
 
-public class Methods_Universal {
+public class Universal {
 
 	
 	private static boolean isCharUpperCase(char C){
@@ -145,7 +146,7 @@ public class Methods_Universal {
 	/*
 	 * Returns true if inputed word is empty
 	 * Word is considered empty if:
-	 * it has only characters "check" or "\n" in it
+	 * it has only characters 'check' or "\n" in it
 	 */
 	private static Boolean checkIsEmptyWord(String input, char check){
 		int i;
@@ -169,7 +170,7 @@ public class Methods_Universal {
 	 * Returns a string of all characters that are between char 'between'
 	 * Example input is: word\\ab"prefix" ,and between is '"'
 	 * then the returned characters are 'prefix'
-	 * Duplicates are eliminated in a separated method
+	 * Duplicates are not eliminated (we called other method to do it)
 	 * If char between doesn't exist it returns empty string ""
 	 * If there is an odd number of chars between it returns empty string ""
 	 */
@@ -245,7 +246,7 @@ public class Methods_Universal {
 	
 	
 	/*
-	 * Generates all subsets of inputed string WITHOUT duplicates
+	 * Generates all permutations of inputed string WITHOUT duplicates
 	 * Example input: "abc" , output is "abc","bac","acb",cab","cba",bca"
 	 * Complexity N! where N is num of chars in input
 	 * Aprox memory used is: 0.09*N!/1024/1024 GB
@@ -341,135 +342,7 @@ public class Methods_Universal {
 		return len;
 	}
 	
-	
-	/*
-	 * Source https://www.java-forums.org/advanced-java/81134-optimise-recursive-method-prints-all-possible-rows-2d-array.html
-	 * You have to pass a clean string array, with no nulls
-	 * Number of generated words: n = multiply number of words in 1D array block with each number of words from next block
-	 * Example input {{"apple","Apple"},{"banana","Banana",}} will result in: applebanana , appleBanana , Applebanana , AppleBanana
-	 */
-	public static void combinations2D(String [][] g) {
-		int n = 1;
-		int length = g.length;
-			
-		for (int j = 0; j < length; j++) {
-			n *= g[j].length;
-		}
 
-		int i[] = new int[length];
-		String tempWords[] = new String[length];
-		int tempPos = 0;
-		for (int k = 0; k < n; k++) {
-			for (int rr = 0; rr < length; rr++) {
-				tempWords[tempPos] = g[rr][i[rr]];
-				tempPos++;
-			}
-			//Immediately permute word so we don't have to store it and waste memory 
-			heapPermutation(tempWords , length);
-				
-			tempWords = new String[length];  
-			tempPos = 0;
-
-			i[length-1]++;
-			for (int j = length-1; j > 0; j--) {
-				if (i[j] >= g[j].length) {
-					i[j] = 0;
-					i[j - 1]++;
-				} else
-					break;
-			}
-			
-		}
-			
-	}
-	
-	
-	/*
-	 * Returns total number of generated words for method combinations2D
-	 */
-	public static long combinations2DCount(String [][] g) {
-		int length = g.length;
-		long totalCombinationCount = 1;
-		
-		for(int i = 0; i < length; ++i)
-			totalCombinationCount *= g[i].length;
-		
-		return totalCombinationCount;	
-	}
-	
-	
-	/*
-	 * Number of generated words is N! where N is number of input words
-	 * Value size needs to be passed as a.length
-	 * Number of generated words: N! where N is number of input words
-	 * Example input {"apple","banana"} will result in: applebanana , bananaapple
-	 */
-	static void heapPermutation(String a[], int size){
-		// if size becomes 1 then save the obtained permutation
-		if (size == 1){
-			Main.writeString(a);
-		}
-		 
-		for (int i=0; i<size; i++){
-			heapPermutation(a, size-1);
-		 
-			// if size is odd, swap first and last
-			// element
-			if (size % 2 == 1){
-				String temp = a[0];
-				a[0] = a[size-1];
-				a[size-1] = temp;
-			}
-		 
-			// If size is even, swap ith and last
-			// element
-			else{
-				String temp = a[i];
-				a[i] = a[size-1];
-				a[size-1] = temp;
-			}
-			
-		}
-		
-	}
-	
-	
-	/*
-	 * Extract words from string input and returns them as arrayList
-	 * char wordSeparator represents word separator example in string "cat dog jaguar" word separator would be char ' ' (space)
-	 */	 
-	private static ArrayList<String> extracInput(String input ,char wordSeparator){
-		ArrayList<String> returnedWords = new ArrayList<String>();
-		String tempWord = "";
-		if( input!=null && input.length()>0 ){
-			for( int i=0; i<input.length() ; i++){
-				char currentChar = input.charAt(i);
-				if( currentChar!=wordSeparator && currentChar!='\n' )
-					tempWord+=input.charAt(i);
-				else{
-					if(tempWord.length()>0)
-						returnedWords.add(tempWord);
-					//else 
-						//Empty word, skipping...
-					tempWord = "";
-				}
-			}
-				
-			//Add last word if there is NO newline at the end
-			if( input.charAt( input.length()-1 ) !='\n' )
-				returnedWords.add(tempWord);
-
-			///*Debug only*/ if( debug.isSelected() ) Log.log("Extracted words: "+Arrays.toString(returnedWords.toArray()));
-			Main.log("Extracted words: "+Arrays.toString(returnedWords.toArray()));
-				
-			return returnedWords;
-				
-		}else{
-			//Input is empty, nothing to return!
-			return null;
-		}
-	}
-		
 		
 	/*
 	 * Returns text from file
@@ -512,6 +385,22 @@ public class Methods_Universal {
 				ex.printStackTrace();
 			}
 		}
+	}
+	
+	
+	/*
+	 * Convert List<List<String>> to String[][] 
+	 * Only temporal solution until method combinations2d is reworked so it can work with lists instead of arrays
+	 */
+	
+	public static String[][] convertListToStringArray( List<List<String>> theStrings ){
+		//List<List<String>> theStrings ... coming from somewhere
+		String[][] stringsAsArray = new String[theStrings.size()][];
+		for (int i=0; i<theStrings.size();i++) {
+		  List<String> aList = theStrings.get(i);
+		  stringsAsArray[i] = aList.toArray(new String[aList.size()]);
+		}
+		return stringsAsArray;
 	}
 	
 }

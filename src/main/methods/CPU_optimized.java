@@ -6,6 +6,6 @@ package main.methods;
  * 
  * */
 
-public class Methods_CPU {
+public class CPU_optimized {
 
 }

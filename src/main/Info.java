@@ -3,15 +3,9 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-
-import main.methods.Methods_Universal;
-
+import main.methods.Universal;
 import javax.swing.JTextArea;
 import java.awt.Font;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import javax.swing.JScrollPane;
 import javax.swing.BoxLayout;
 import java.awt.Color;
@@ -48,7 +42,7 @@ public class Info extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.X_AXIS));
 		
-		JScrollPane scrollPane = new JScrollPane();
+		final JScrollPane scrollPane = new JScrollPane();
 		contentPane.add(scrollPane);
 		
 		JTextArea txtrT = new JTextArea();
@@ -58,7 +52,16 @@ public class Info extends JFrame {
 		txtrT.setLineWrap(true);
 		scrollPane.setViewportView(txtrT);
 		txtrT.setFont(new Font("Monospaced", Font.PLAIN, 12));
-		txtrT.setText( Methods_Universal.readTextFromFile("info.txt") );
+		txtrT.setText( Universal.readTextFromFile("info.txt") );
+		
+		/*
+		 * Move scroll bar up to the starting position (it goes to bottom after adding help text)
+		 */
+		javax.swing.SwingUtilities.invokeLater( new Runnable() {
+			public void run() {
+				scrollPane.getVerticalScrollBar().setValue(0);
+			}
+		});
 	}
 
 }
