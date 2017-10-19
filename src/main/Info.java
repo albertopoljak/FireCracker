@@ -3,7 +3,7 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import main.methods.Universal;
+import main.methods.Helpers;
 import javax.swing.JTextArea;
 import java.awt.Font;
 import javax.swing.JScrollPane;
@@ -52,7 +52,7 @@ public class Info extends JFrame {
 		txtrT.setLineWrap(true);
 		scrollPane.setViewportView(txtrT);
 		txtrT.setFont(new Font("Monospaced", Font.PLAIN, 12));
-		txtrT.setText( Universal.readTextFromFile("info.txt") );
+		txtrT.setText( Helpers.readTextFromFile("info.txt") );
 		
 		/*
 		 * Move scroll bar up to the starting position (it goes to bottom after adding help text)

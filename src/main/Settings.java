@@ -3,7 +3,9 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import main.methods.Universal;
+
+import main.methods.Log;
+import main.methods.ProcessInput;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JRadioButton;
@@ -110,11 +112,6 @@ public class Settings extends JFrame {
 		btnKillTheMusic.setForeground(Color.GRAY);
 		btnKillTheMusic.setBackground(Color.DARK_GRAY);
 		btnKillTheMusic.setFocusPainted(false);
-		btnKillTheMusic.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseReleased(MouseEvent arg0) {
-			}
-		});
 		btnKillTheMusic.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		btnKillTheMusic.setBounds(10, 114, 120, 21);
 		contentPane.add(btnKillTheMusic);
@@ -169,7 +166,6 @@ public class Settings extends JFrame {
 		rdbtnAutoRamDetection.setBounds(145, 31, 110, 23);
 		contentPane.add(rdbtnAutoRamDetection);
 		
-		//Group the radio buttons.
 		ButtonGroup group = new ButtonGroup();
 	    group.add(rdbtnIHaveLow);
 	    group.add(rdbtnIHaveHigh);
@@ -202,7 +198,7 @@ public class Settings extends JFrame {
 					textFieldSavePath.setText(selectedFile.getAbsolutePath());
 					savePath = selectedFile.getAbsolutePath();
 				}else
-					Main.log("[ERROR]--> File not selected!\n");
+					Log.write("File not selected!", 'E');
 
 			}
 		});
@@ -272,14 +268,14 @@ public class Settings extends JFrame {
 			@Override
 			public void mouseReleased(MouseEvent arg0) {
 				//private static String reservedCharactersFromOptions = "";
-				String reservedCharactersFromOptions = Universal.getCharactersFromOptions( Main.getTxtWords(), separatorOption );
+				String reservedCharactersFromOptions = ProcessInput.getCharactersFromOptions( Main.getTxtWords(), separatorOption );
 				if( txtrSeparatorWord.getText()!=null &&  txtrSeparatorWord.getText().length()>0 ){
 					if( inputContainsCharFromString( String.valueOf(txtrSeparatorWord.getText().charAt(0)).toUpperCase(), reservedCharacters ) || inputContainsCharFromString( String.valueOf(txtrSeparatorWord.getText().charAt(0)), reservedCharactersFromOptions ))
-						System.out.println("Character is reserved!\nReserved characters are(inside the quotes, including their lowercase):\""+reservedCharacters+"\" \n,plus these characters from options(inside the quotes, case sensitive):\""+reservedCharactersFromOptions+"\"");
+						Log.write("Character is reserved!\nReserved characters are(inside the quotes, including their lowercase):\""+reservedCharacters+"\" \n,plus these characters from options(inside the quotes, case sensitive):\""+reservedCharactersFromOptions+"\"" , 'B');
 					else
 						wordSeparator = txtrSeparatorWord.getText().charAt(0);
 				}else
-					System.out.println("Input a character first!");
+					Log.write("Input a character first!", 1 , 'B');
 			}
 		});
 		btnSetWordSeparator.setFont(new Font("Tahoma", Font.PLAIN, 11));
@@ -327,14 +323,14 @@ public class Settings extends JFrame {
 		btnSetOptionSeparator.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent arg0) {
-				String reservedCharactersFromOptions = Universal.getCharactersFromOptions( Main.getTxtWords(), separatorOption );
+				String reservedCharactersFromOptions = ProcessInput.getCharactersFromOptions( Main.getTxtWords(), separatorOption );
 				if( txtrSeparatorOption.getText()!=null &&  txtrSeparatorOption.getText().length()>0 ){
 					if( inputContainsCharFromString( String.valueOf(txtrSeparatorOption.getText().charAt(0)).toUpperCase(), reservedCharacters ) || inputContainsCharFromString( String.valueOf(txtrSeparatorOption.getText().charAt(0)), reservedCharactersFromOptions ))
-						System.out.println("Character is reserved!\nReserved characters are(inside the quotes, including their lowercase):\""+reservedCharacters+"\" \n,plus these characters from options(inside the quotes, case sensitive):\""+reservedCharactersFromOptions+"\"");
+						Log.write("Character is reserved!\nReserved characters are(inside the quotes, including their lowercase):\""+reservedCharacters+"\" \n,plus these characters from options(inside the quotes, case sensitive):\""+reservedCharactersFromOptions+"\"" , 'B');
 					else
 						changeOptionSeparator( txtrSeparatorOption.getText().charAt(0) );
 				}else
-					System.out.println("Input a character first!");
+					Log.write("Input a character first!" , 1 , 'B');
 			}
 		});
 		btnSetOptionSeparator.setFont(new Font("Tahoma", Font.PLAIN, 11));

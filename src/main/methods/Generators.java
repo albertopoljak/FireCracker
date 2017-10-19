@@ -2,7 +2,7 @@ package main.methods;
 
 import main.Main;
 
-public class Placeholder {
+public class Generators {
 
 	/*
 	 * Source https://www.java-forums.org/advanced-java/81134-optimise-recursive-method-prints-all-possible-rows-2d-array.html

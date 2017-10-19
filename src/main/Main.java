@@ -3,8 +3,10 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import main.methods.Placeholder;
-import main.methods.Universal;
+import javax.swing.JTextPane;
+
+import main.methods.Generators;
+import main.methods.Helpers;
 import java.awt.BorderLayout;
 import java.awt.Font;
 import javax.swing.JButton;
@@ -27,7 +29,7 @@ public class Main {
 	private static JFrame frmDecypherInStyle;
 	private static Settings windowSettings;
 	private static JTextArea txtWords;
-	private static JTextArea txtrLog;
+	public static JTextPane txtrLog;
 	private static JLabel textCurrentMemUsage;
 	private static PrintWriter out;
 	private static Timer timer;
@@ -76,7 +78,6 @@ public class Main {
 			frmDecypherInStyle.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			frmDecypherInStyle.getContentPane().setLayout(null);
 			
-		//Add text label
 			JLabel txtEnter = new JLabel();
 			txtEnter.setForeground(Color.LIGHT_GRAY);
 			txtEnter.setFont(new Font("Tahoma", Font.PLAIN, 11));
@@ -85,22 +86,18 @@ public class Main {
 			txtEnter.setOpaque(false);
 			frmDecypherInStyle.getContentPane().add(txtEnter);
 			
-		//Add text log in form of JTextArea
-			txtrLog = new JTextArea();
+			txtrLog = new JTextPane();
 			txtrLog.setBackground(Color.GRAY);
-			txtrLog.append("Log:\n");
-			txtrLog.setLineWrap(true);
+			txtrLog.setText("Log:\n");
 			txtrLog.setEditable(false);
 			txtrLog.setFont(new Font("Calibri", Font.PLAIN, 18));
 			txtrLog.setBounds(20, 49, 399, 482);
 			
-		//Add Scroll Pane with text log in it
 			JScrollPane sp = new JScrollPane(txtrLog);
 			sp.setLocation(14, 240);
 			sp.setSize(600, 300);
 			frmDecypherInStyle.getContentPane().add(sp, BorderLayout.CENTER);
 			
-		//Add button that gets relative path and updates log window
 			JButton btnGetSavePath = new JButton("Print save path");
 			btnGetSavePath.setBackground(Color.DARK_GRAY);
 			btnGetSavePath.setForeground(Color.GRAY);
@@ -128,7 +125,6 @@ public class Main {
 			txtWords.setLineWrap(true);
 			txtWords.setToolTipText("");	
 			
-		//Add button that clears inputed words
 			JButton btnClearWords = new JButton("Clear Words");
 			btnClearWords.setBackground(Color.DARK_GRAY);
 			btnClearWords.setForeground(Color.GRAY);
@@ -143,7 +139,6 @@ public class Main {
 			btnClearWords.setBounds(624, 6, 140, 20);
 			frmDecypherInStyle.getContentPane().add(btnClearWords);	
 			
-		//Add button that clears log
 			JButton btnClearLog = new JButton("Clear Log");
 			btnClearLog.setBackground(Color.DARK_GRAY);
 			btnClearLog.setForeground(Color.GRAY);
@@ -153,13 +148,12 @@ public class Main {
 				@Override
 				public void mouseReleased(MouseEvent arg0) {
 					txtrLog.setText("");
-					txtrLog.append("Log:\n");
+					txtrLog.setText("Log:\n");
 				}
 			});
 			btnClearLog.setBounds(624, 420, 140, 22);
 			frmDecypherInStyle.getContentPane().add(btnClearLog);
 		
-		//Add button that opens new window ("Info")
 			JButton btnInfo = new JButton("Help");
 			btnInfo.setBackground(Color.DARK_GRAY);
 			btnInfo.setForeground(Color.GRAY);
@@ -174,7 +168,6 @@ public class Main {
 			btnInfo.setBounds(624, 449, 140, 22);
 			frmDecypherInStyle.getContentPane().add(btnInfo);
 					
-		//Add button that ?
 			JButton btnHack = new JButton("Hack!");
 			btnHack.setBackground(Color.DARK_GRAY);
 			btnHack.setForeground(Color.GRAY);
@@ -187,7 +180,7 @@ public class Main {
 						openPrintWriter("wordList.txt");
 						List<List<String>> tempOutput = new ArrayList<List<String>>();
 						tempOutput = buildWords( extractInput(txtWords.getText() , Settings.wordSeparator), Settings.wordCombine , Settings.optionSeparator ) ;
-						Placeholder.combinations2D( Universal.convertListToStringArray(tempOutput) );
+						Generators.combinations2D( Helpers.convertListToStringArray(tempOutput) );
 						closePrintWriter();
 						txtrLog.append("Test: "+test+"\n");
 						test=0;
@@ -259,7 +252,7 @@ public class Main {
 			btnRefreshVariables.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseReleased(MouseEvent arg0) {
-					textCurrentMemUsage.setText("MB: " + Universal.getMemoryUsageLong());
+					textCurrentMemUsage.setText("MB: " + Helpers.getMemoryUsageLong());
 					
 				}
 			});
@@ -296,7 +289,7 @@ public class Main {
 		timer.scheduleAtFixedRate(new TimerTask() {
 			@Override
 			public void run() {
-				textCurrentMemUsage.setText("MB: " + Universal.getMemoryUsageLong());
+				textCurrentMemUsage.setText("MB: " + Helpers.getMemoryUsageLong());
 			}
 		}, 0, intervalSeconds*1000);
 	
