@@ -7,6 +7,8 @@ import javax.swing.JTextPane;
 
 import main.methods.Generators;
 import main.methods.Helpers;
+import main.methods.Log;
+
 import java.awt.BorderLayout;
 import java.awt.Font;
 import javax.swing.JButton;
@@ -106,7 +108,7 @@ public class Main {
 			btnGetSavePath.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseReleased(MouseEvent e) {
-					txtrLog.append("Save path location:\n"+Settings.savePath+"\n");
+					Log.write("Save path location:\n"+Settings.savePath , 'I');
 				}
 			});
 			btnGetSavePath.setBounds(624, 390, 140, 23);
@@ -126,16 +128,16 @@ public class Main {
 			txtWords.setToolTipText("");	
 			
 			JButton btnClearWords = new JButton("Clear Words");
-			btnClearWords.setBackground(Color.DARK_GRAY);
-			btnClearWords.setForeground(Color.GRAY);
-			btnClearWords.setFocusPainted(false);
-			btnClearWords.setFont(new Font("Tahoma", Font.PLAIN, 11));
 			btnClearWords.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseReleased(MouseEvent e) {
 					txtWords.setText("");
 				}
 			});
+			btnClearWords.setBackground(Color.DARK_GRAY);
+			btnClearWords.setForeground(Color.GRAY);
+			btnClearWords.setFocusPainted(false);
+			btnClearWords.setFont(new Font("Tahoma", Font.PLAIN, 11));
 			btnClearWords.setBounds(624, 6, 140, 20);
 			frmDecypherInStyle.getContentPane().add(btnClearWords);	
 			
@@ -147,7 +149,6 @@ public class Main {
 			btnClearLog.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseReleased(MouseEvent arg0) {
-					txtrLog.setText("");
 					txtrLog.setText("Log:\n");
 				}
 			});
@@ -182,11 +183,11 @@ public class Main {
 						tempOutput = buildWords( extractInput(txtWords.getText() , Settings.wordSeparator), Settings.wordCombine , Settings.optionSeparator ) ;
 						Generators.combinations2D( Helpers.convertListToStringArray(tempOutput) );
 						closePrintWriter();
-						txtrLog.append("Test: "+test+"\n");
+						Log.appendToTextPanel("Test: "+test, 'I');
 						test=0;
 						
 					}catch(Exception exc){
-						txtrLog.append("Error: "+exc+"\n");
+						Log.write("Error: "+exc , 'E');
 					}
 				}
 			});
@@ -310,16 +311,11 @@ public class Main {
 	}
 
 
-	public static void log(String text){
-		txtrLog.append( text );
-	}
-
-
 	public static void openPrintWriter(String filePath) throws IOException{
 		try {
 			out = new PrintWriter(new BufferedWriter(new FileWriter(filePath, true)));
 		} catch (IOException e) {
-			txtrLog.append("Error creating file for saving!\n"+e+"\n");
+			Log.appendToTextPanel("Error creating file for saving!\n"+e , 'E');
 			throw new IOException(e);
 		}
 	}
@@ -341,13 +337,13 @@ public class Main {
 	//Methods for settings
 	public static void autoMemoryDetection(){
 		long maxMemory = Runtime.getRuntime().maxMemory()/1024/1024;
-		txtrLog.append("Max memory: "+maxMemory+"mb\n");
+		Log.write("Max memory: "+maxMemory+"mb");
 		if(maxMemory<2000){
 			Settings.lowMemory = true;
-			txtrLog.append("Program is set to run on low memory (less that 2000mb).\n"
+			Log.write("Program is set to run on low memory (less that 2000mb).\n"
 					+ "This will affect program execution time but will reduce memory usage.\n"
 					+ "If the memory reduction is not enough and the program eats all the memory it will crash.\n"
-					+ "Run in 64bits to increase avaiable memory size (works only if you have more than 2gb RAM)\n");
+					+ "Run in 64bits to increase avaiable memory size (works only if you have more than 2gb RAM)");
 		}else
 			Settings.lowMemory = false;
 	}
@@ -377,7 +373,7 @@ public class Main {
 						if(tempWord.length()>0)
 							returnedWords.add(tempWord);
 						else
-							txtrLog.append("Empty word, skipping...\n");
+							Log.writeDebug("Skipping empty word (you probably typed word separator twice)..." );
 						tempWord = "";
 					}
 				}
@@ -386,13 +382,12 @@ public class Main {
 				if( input.charAt( input.length()-1 ) !='\n' )
 					returnedWords.add(tempWord);
 
-				///*Debug only*/ if( debug.isSelected() ) Log.log("Extracted words: "+Arrays.toString(returnedWords.toArray()));
-				txtrLog.append("\nExtracted words: "+Arrays.toString(returnedWords.toArray())+"\n");
+				Log.writeDebug("Extracted input: " + Arrays.toString(returnedWords.toArray()) );
 				
 				return returnedWords;
 				
 			}else{
-				txtrLog.append("Input is empty, nothing to return!");
+				Log.write("Input is empty!" , 'W');
 				return null;
 			}
 		}
@@ -427,12 +422,10 @@ public class Main {
 				extractWords( tempOutput, i, inputWords.get(i).toString(), combiningSeparator, optionSeparator );
 			}
 			
-			//tempOutput.get(0).add("foobar");
-			//temp Print
+			Log.writeDebug( "These words were extracted from input:" );
 			for( i=0; i<Y; i++){
-				StringBuilder builder = new StringBuilder();
 				for (String value : tempOutput.get(i)) {
-					txtrLog.append( "\n"+(i+1)+":"+value );
+					Log.writeDebug( (i+1) + ":" + value );
 				}
 			}
 			
@@ -456,7 +449,7 @@ public class Main {
 				 * There is combining separator in string so we will break the word
 				 * in 2 parts and call this function again with each part
 				 */
-				txtrLog.append("There is combining separator in string!\n");
+			   Log.writeDebug("Found combining separator in string: " + extractString );
 			   String tempInput = extractString ;
 			   StringBuilder temp = new StringBuilder();
 			   for( int i=0; i<tempInput.length(); i++ ){
@@ -494,9 +487,10 @@ public class Main {
 					String optionSeparatorDouble = optionSeparator+""+optionSeparator;
 					String[] word = optionString.split(optionSeparatorDouble);
 					word = removeEmpty(word);
-					txtrLog.append("Printing word array:\n");
-					//for(int k =0; k<word.length;k++)
-					//	log.append(k+":"+word[k]+"\n");
+					
+					Log.writeDebug("Printing option array(ID:option) :" );
+					for(int k =0; k<word.length;k++)
+						Log.writeDebug( k + ": " + word[k] );
 					
 						for(String optionPart: word){
 							/*
@@ -507,19 +501,19 @@ public class Main {
 								/*
 								 * Before calling the option method first extract sub-options
 								 */
-							txtrLog.append("Spliting:'"+optionPart+"' to suboptions!\n");
+							Log.writeDebug("Spliting:'"+optionPart+"' to suboptions!" );
 								String[] subOptions = optionPart.split( ""+optionSeparator );
 								/*
 								 * Now remove empty words from sub-options produced by optionString.split
 								 */
 								subOptions = removeEmpty(subOptions);
-								txtrLog.append("Resulting clear array:\n");
+								Log.writeDebug("Resulting suboptions array(ID:suboption) :" );
 								for(int k =0; k<subOptions.length;k++)
-									txtrLog.append(k+":"+subOptions[k]+"\n");
+									Log.writeDebug(k+":"+subOptions[k] );
 								/*
 								 * String in first index of finalSubOptions is the option while rest are subOptions
 								 */
-								//log.append("baseString:"+baseString+" ,optionPart:"+optionPart+" , subOptions: (printed above)\n");
+								//Log.writeDebug("baseString: "+baseString+"  ,optionPart:"+optionPart+"  ,subOptions: (printed above)");
 								extractOptions( inputList, index, baseString, subOptions );
 							//}
 						}
@@ -528,7 +522,7 @@ public class Main {
 					/*
 					 * There are no options in word so we just add it to the list
 					 */
-					txtrLog.append("No options in word!\n");
+					Log.writeDebug("No options in word:"+extractString );
 					inputList.get(index).add(extractString);
 					return;
 				}
@@ -547,8 +541,8 @@ public class Main {
 			
 			//Potential error handling (some of this might not be needed)
 			if( !(subOptions.length>0) ) {
-				txtrLog.append("Options have been found for word "+baseString+" but program couldn't read them!\n"
-						+ "(length!>0)\n");
+				Log.write("Options have been found for word "+baseString+" but program couldn't read them!\n"
+						+ "(length!>0)" , 'W');
 				return;
 			}/*else if( subOptions.length==1 ) {
 				log.append("Options have been found for word "+baseString+" but program couldn't read them!\n"
@@ -561,14 +555,14 @@ public class Main {
 			switch (subOptions[0]) {
 	        case "b":
 	        	if( subOptions.length>1 ){
-	        		txtrLog.append("Option 'b' can't have suboptions! ("+subOptions[1]+" etc...)"+"\n");
+	        		Log.write("Option 'b' can't have suboptions! ("+subOptions[1]+" etc...)" , 'E');
 	        	}else{
 
 	        	}
 	        	break;
 	        case "l":
 	        	if( subOptions.length>1 ){
-	        		txtrLog.append("Option 'l' can't have suboptions! ("+subOptions[1]+" etc...)"+"\n");
+	        		Log.write("Option 'l' can't have suboptions! ("+subOptions[1]+" etc...)" , 'E');
 	        		break;
 	        	}else{
 	        		//inputList.get(index).add( baseString.toLowerCase() );
@@ -576,23 +570,23 @@ public class Main {
 	        	break;
 	        case "u":
 	        	if( subOptions.length>1 ){
-	        		txtrLog.append("Option 'u' can't have suboptions! ("+subOptions[1]+" etc...)"+"\n");
+	        		Log.write("Option 'u' can't have suboptions! ("+subOptions[1]+" etc...)" , 'E');
 	        		break;
 	        	}else{
 	        		inputList.get(index).add( baseString.toUpperCase() );
 	        	}
 	        	break;
 	        case "ip":
-	        	txtrLog.append("Option 'ip' is not curently in function! \n");
+	        	Log.write("Option 'ip' is not curently in function!" , 'W');
 	        	break;
 	        case "ab":
-	        	txtrLog.append("Option 'ab' is not curently in function! \n");
+	        	Log.write("Option 'ab' is not curently in function!" , 'W');
 	        	break;
 	        case "ae":
-	        	txtrLog.append("Option 'ae' is not curently in function! \n");
+	        	Log.write("Option 'ae' is not curently in function!" , 'W');
 	        	break;
 	        default:
-	        	txtrLog.append("ERROR: Can't find option '"+subOptions[0]+"' !\n");
+	        	Log.write("Can't find option '" +subOptions[0]+ "'" , 'E');
 			}
 			
 			

@@ -15,6 +15,7 @@ public class ProcessInput {
 	 * Blank words are eliminated
 	 * Duplicates are not eliminated
 	 */
+	//Function is not called, duplicate?
 	public static ArrayList<String> extractInputWords(String input, char wordSeparator){
 		int length = input.length();
 
@@ -51,7 +52,7 @@ public class ProcessInput {
 			}
 		}
 		
-		Log.write("Extracted words: "+Arrays.toString(returnedWords.toArray()), 2);
+		Log.writeDebug("Extracted words: "+Arrays.toString(returnedWords.toArray()) );
 
 		return returnedWords;
 	}
@@ -103,7 +104,7 @@ public class ProcessInput {
 
 		int count = text.length() - text.replace( String.valueOf(between), "").length();
 		if((count & 1) != 0 ){
-			Log.write("There can't be an odd number of '"+between+"' characters!" , 3, 'E' );
+			Log.write("There can't be an odd number of '"+between+"' characters!" , 'E' );
 			return "";
 		}
 

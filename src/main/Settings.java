@@ -3,7 +3,6 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-
 import main.methods.Log;
 import main.methods.ProcessInput;
 import javax.swing.JButton;
@@ -271,11 +270,11 @@ public class Settings extends JFrame {
 				String reservedCharactersFromOptions = ProcessInput.getCharactersFromOptions( Main.getTxtWords(), separatorOption );
 				if( txtrSeparatorWord.getText()!=null &&  txtrSeparatorWord.getText().length()>0 ){
 					if( inputContainsCharFromString( String.valueOf(txtrSeparatorWord.getText().charAt(0)).toUpperCase(), reservedCharacters ) || inputContainsCharFromString( String.valueOf(txtrSeparatorWord.getText().charAt(0)), reservedCharactersFromOptions ))
-						Log.write("Character is reserved!\nReserved characters are(inside the quotes, including their lowercase):\""+reservedCharacters+"\" \n,plus these characters from options(inside the quotes, case sensitive):\""+reservedCharactersFromOptions+"\"" , 'B');
+						Log.write("Can't set word separator because that character is reserved!\nReserved characters are(inside the quotes, including their lowercase):\""+reservedCharacters+"\" \n,plus these characters from options(inside the quotes, case sensitive):\""+reservedCharactersFromOptions+"\"" , 'E');
 					else
 						wordSeparator = txtrSeparatorWord.getText().charAt(0);
 				}else
-					Log.write("Input a character first!", 1 , 'B');
+					Log.appendToTextPanel("Input a character first!" , 'W');
 			}
 		});
 		btnSetWordSeparator.setFont(new Font("Tahoma", Font.PLAIN, 11));
@@ -326,11 +325,11 @@ public class Settings extends JFrame {
 				String reservedCharactersFromOptions = ProcessInput.getCharactersFromOptions( Main.getTxtWords(), separatorOption );
 				if( txtrSeparatorOption.getText()!=null &&  txtrSeparatorOption.getText().length()>0 ){
 					if( inputContainsCharFromString( String.valueOf(txtrSeparatorOption.getText().charAt(0)).toUpperCase(), reservedCharacters ) || inputContainsCharFromString( String.valueOf(txtrSeparatorOption.getText().charAt(0)), reservedCharactersFromOptions ))
-						Log.write("Character is reserved!\nReserved characters are(inside the quotes, including their lowercase):\""+reservedCharacters+"\" \n,plus these characters from options(inside the quotes, case sensitive):\""+reservedCharactersFromOptions+"\"" , 'B');
+						Log.write("Can't set word separator because that character is reserved!\nReserved characters are(inside the quotes, including their lowercase):\""+reservedCharacters+"\" \n,plus these characters from options(inside the quotes, case sensitive):\""+reservedCharactersFromOptions+"\"" , 'B');
 					else
 						changeOptionSeparator( txtrSeparatorOption.getText().charAt(0) );
 				}else
-					Log.write("Input a character first!" , 1 , 'B');
+					Log.appendToTextPanel("Input a character first!" , 'W');
 			}
 		});
 		btnSetOptionSeparator.setFont(new Font("Tahoma", Font.PLAIN, 11));
