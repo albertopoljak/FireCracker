@@ -4,10 +4,10 @@ import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextPane;
-
-import main.methods.Generators;
+import main.methods.CombinatoricsPermutations;
 import main.methods.Helpers;
 import main.methods.Log;
+import main.methods.ProcessInput;
 
 import java.awt.BorderLayout;
 import java.awt.Font;
@@ -84,14 +84,14 @@ public class Main {
 			txtEnter.setForeground(Color.LIGHT_GRAY);
 			txtEnter.setFont(new Font("Tahoma", Font.PLAIN, 11));
 			txtEnter.setBounds(14, 11, 600, 18);
-			txtEnter.setText("Enter set of possible words with space in between (char space can be changed in settings)");
+			txtEnter.setText("Enter set of possible words with their options");
 			txtEnter.setOpaque(false);
 			frmDecypherInStyle.getContentPane().add(txtEnter);
 			
 			txtrLog = new JTextPane();
+			txtrLog.setEditable(false);
 			txtrLog.setBackground(Color.GRAY);
 			txtrLog.setText("Log:\n");
-			txtrLog.setEditable(false);
 			txtrLog.setFont(new Font("Calibri", Font.PLAIN, 18));
 			txtrLog.setBounds(20, 49, 399, 482);
 			
@@ -163,7 +163,7 @@ public class Main {
 			btnInfo.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseReleased(MouseEvent arg0) {
-					Info.newScreen();					
+					Help.newScreen();					
 				}
 			});
 			btnInfo.setBounds(624, 449, 140, 22);
@@ -180,8 +180,8 @@ public class Main {
 					try{
 						openPrintWriter("wordList.txt");
 						List<List<String>> tempOutput = new ArrayList<List<String>>();
-						tempOutput = buildWords( extractInput(txtWords.getText() , Settings.wordSeparator), Settings.wordCombine , Settings.optionSeparator ) ;
-						Generators.combinations2D( Helpers.convertListToStringArray(tempOutput) );
+						tempOutput = buildWords( ProcessInput.extractInput(txtWords.getText() , Settings.wordSeparator), Settings.wordCombinator , Settings.optionSeparator ) ;
+						CombinatoricsPermutations.combinations2D( Helpers.convertListToStringArray(tempOutput) );
 						closePrintWriter();
 						Log.appendToTextPanel("Test: "+test, 'I');
 						test=0;
@@ -253,8 +253,7 @@ public class Main {
 			btnRefreshVariables.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseReleased(MouseEvent arg0) {
-					textCurrentMemUsage.setText("MB: " + Helpers.getMemoryUsageLong());
-					
+					textCurrentMemUsage.setText("MB: " + getMemoryUsage());	
 				}
 			});
 			btnRefreshVariables.setFont(new Font("Tahoma", Font.PLAIN, 11));
@@ -290,26 +289,27 @@ public class Main {
 		timer.scheduleAtFixedRate(new TimerTask() {
 			@Override
 			public void run() {
-				textCurrentMemUsage.setText("MB: " + Helpers.getMemoryUsageLong());
+				textCurrentMemUsage.setText("MB: " + getMemoryUsage());
 			}
 		}, 0, intervalSeconds*1000);
 	
 	}
 
-
+	public static long getMemoryUsage(){
+		Runtime instance = Runtime.getRuntime();
+		return (instance.totalMemory() - instance.freeMemory()) / 1024 / 1024;
+	}
+	
+	public static long getMaxMemoryUsage(){
+		Runtime instance = Runtime.getRuntime();
+		return instance.maxMemory() / 1024 / 1024;
+	}
+	
 	public static void changeUpdateVariable(int newInterval){
 		timer.cancel();
 		if(newInterval>0)
 			printMemoryUsageInInterval(newInterval);
 	}	
-
-
-	//Method to clear list (.clear leaves memory footprint for the largest element, meaning N*nullElements)
-	private static ArrayList<String> clearList() {
-		ArrayList<String> newList = new ArrayList<String>();
-		return newList;
-	}
-
 
 	public static void openPrintWriter(String filePath) throws IOException{
 		try {
@@ -325,19 +325,20 @@ public class Main {
 			out.close();
 	}
 
-
-	public static void writeString(String write[]){
+	public static void writeStringToPrintWriter(String write[]){
 		int n = write.length;
 		for (int i=0; i<n; i++)
 			out.print(write[i]);
 		out.println();
 	}	
 
-
-	//Methods for settings
+	
+	/*
+	 * Methods for settings
+	 */
 	public static void autoMemoryDetection(){
-		long maxMemory = Runtime.getRuntime().maxMemory()/1024/1024;
-		Log.write("Max memory: "+maxMemory+"mb");
+		long maxMemory = getMaxMemoryUsage();
+		Log.write("Max memory: " + maxMemory + "mb");
 		if(maxMemory<2000){
 			Settings.lowMemory = true;
 			Log.write("Program is set to run on low memory (less that 2000mb).\n"
@@ -349,48 +350,13 @@ public class Main {
 	}
 
 
-	//Getters	
+	/*
+	 * Getters	
+	 */
 	public static String getTxtWords(){
 		return txtWords.getText();
 	}
 	
-	
-	
-	
-	/*Extract input (all words+their options) from string input and returns them as arrayList
-	 * char wordSeparator represents word separator example in string "cat dog jaguar" word separator would be char ' ' (space)
-	 */
-		 
-		private static ArrayList<String> extractInput(String input ,char wordSeparator){
-			ArrayList<String> returnedWords = new ArrayList<String>();
-			String tempWord = "";
-			if( input!=null && input.length()>0 ){
-				for( int i=0; i<input.length() ; i++){
-					char currentChar = input.charAt(i);
-					if( currentChar!=wordSeparator && currentChar!='\n' )
-						tempWord+=input.charAt(i);
-					else{
-						if(tempWord.length()>0)
-							returnedWords.add(tempWord);
-						else
-							Log.writeDebug("Skipping empty word (you probably typed word separator twice)..." );
-						tempWord = "";
-					}
-				}
-				
-				//Add last word if there is NO newline at the end
-				if( input.charAt( input.length()-1 ) !='\n' )
-					returnedWords.add(tempWord);
-
-				Log.writeDebug("Extracted input: " + Arrays.toString(returnedWords.toArray()) );
-				
-				return returnedWords;
-				
-			}else{
-				Log.write("Input is empty!" , 'W');
-				return null;
-			}
-		}
 	
 		
 		
@@ -422,7 +388,7 @@ public class Main {
 				extractWords( tempOutput, i, inputWords.get(i).toString(), combiningSeparator, optionSeparator );
 			}
 			
-			Log.writeDebug( "These words were extracted from input:" );
+			Log.writeDebug( "Base words that were extracted from input(without their options):" );
 			for( i=0; i<Y; i++){
 				for (String value : tempOutput.get(i)) {
 					Log.writeDebug( (i+1) + ":" + value );
@@ -488,7 +454,7 @@ public class Main {
 					String[] word = optionString.split(optionSeparatorDouble);
 					word = removeEmpty(word);
 					
-					Log.writeDebug("Printing option array(ID:option) :" );
+					Log.writeDebug("Printing option array for word: '" + extractString + "' in format (ID:option) :" );
 					for(int k =0; k<word.length;k++)
 						Log.writeDebug( k + ": " + word[k] );
 					
@@ -507,7 +473,7 @@ public class Main {
 								 * Now remove empty words from sub-options produced by optionString.split
 								 */
 								subOptions = removeEmpty(subOptions);
-								Log.writeDebug("Resulting suboptions array(ID:suboption) :" );
+								Log.writeDebug("Printing suboptions (ID:suboption) where ID=0 means base option:" );
 								for(int k =0; k<subOptions.length;k++)
 									Log.writeDebug(k+":"+subOptions[k] );
 								/*

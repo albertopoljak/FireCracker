@@ -3,8 +3,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.List;
-import main.Info;
+import main.Help;
 
 public class Helpers {
 
@@ -19,7 +20,7 @@ public class Helpers {
 
 		try {
 			
-			is = Info.class.getResourceAsStream(filename);
+			is = Help.class.getResourceAsStream(filename);
 		    isr = new InputStreamReader(is);
 		    br = new BufferedReader(isr);
 			
@@ -54,9 +55,13 @@ public class Helpers {
 	
 	
 	
-	public static long getMemoryUsageLong(){
-		return ( Runtime.getRuntime().totalMemory()/1024/1024 );
-	}
+	/*
+	 * Method to clear list (.clear leaves memory footprint for the largest element, meaning N*nullElements)
+	 */
+		private static ArrayList<String> clearList() {
+			ArrayList<String> newList = new ArrayList<String>();
+			return newList;
+		}
 	
 	
 	

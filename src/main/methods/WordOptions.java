@@ -1,8 +1,7 @@
 package main.methods;
 import java.util.ArrayList;
-import main.Main;
 
-public class Options {
+public class WordOptions {
 
 
 

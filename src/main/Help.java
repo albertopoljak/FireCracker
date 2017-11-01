@@ -10,9 +10,9 @@ import javax.swing.JScrollPane;
 import javax.swing.BoxLayout;
 import java.awt.Color;
 
-public class Info extends JFrame {
+public class Help extends JFrame {
 
-	private JPanel contentPane;
+	private static JPanel contentPane;
 
 	/**
 	 * Launch the application.
@@ -21,7 +21,7 @@ public class Info extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Info frame = new Info();
+					Help frame = new Help();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -33,7 +33,7 @@ public class Info extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public Info() {
+	public Help() {
 		setTitle("Info (resizable)");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 800, 600);
@@ -52,7 +52,7 @@ public class Info extends JFrame {
 		txtrT.setLineWrap(true);
 		scrollPane.setViewportView(txtrT);
 		txtrT.setFont(new Font("Monospaced", Font.PLAIN, 12));
-		txtrT.setText( Helpers.readTextFromFile("info.txt") );
+		txtrT.setText( Helpers.readTextFromFile("help.txt") );
 		
 		/*
 		 * Move scroll bar up to the starting position (it goes to bottom after adding help text)
