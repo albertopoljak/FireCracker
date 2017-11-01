@@ -65,7 +65,6 @@ public class CombinatoricsPermutations {
 	/*
 	 * Number of generated words is N! where N is number of input words
 	 * Value size needs to be passed as a.length
-	 * Number of generated words: N! where N is number of input words
 	 * Example input {"apple","banana"} will result in: applebanana , bananaapple
 	 */
 	static void heapPermutation(String a[], int size){

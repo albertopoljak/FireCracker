@@ -1,11 +1,69 @@
 package main.methods;
 import java.util.ArrayList;
+import java.util.List;
 
 public class WordOptions {
 
+	/*
+	 * Build options
+	 * optionString is already checked for empty in the previous method
+	 * String in first index of finalSubOptions is the option while rest are subOptions
+	 */
+	public static void extractOptions( List<List<String>> inputList , int index , String baseString, String[] subOptions ){
+		
+		if( subOptions.length==0 ) {
+			Log.write("Options have been found for word "+baseString+" but program couldn't read them!\n"
+					+ "(length!>0)" , 'W');
+			return;
+		}
+		
+		/*
+		 * Now call functions based on found options and their sub-options
+		 */
+		
+		switch (subOptions[0]) {
+        case "b":
+        	if( subOptions.length>1 ){
+        		Log.write("Option 'b' can't have suboptions! ("+subOptions[1]+" etc...)" , 'E');
+        	}else{
 
+        	}
+        	break;
+        case "l":
+        	if( subOptions.length>1 ){
+        		Log.write("Option 'l' can't have suboptions! ("+subOptions[1]+" etc...)" , 'E');
+        		break;
+        	}else{
+        		inputList.get(index).add( baseString.toLowerCase() );
+        	}
+        	break;
+        case "u":
+        	if( subOptions.length>1 ){
+        		Log.write("Option 'u' can't have suboptions! ("+subOptions[1]+" etc...)" , 'E');
+        		break;
+        	}else{
+        		inputList.get(index).add( baseString.toUpperCase() );
+        	}
+        	break;
+        case "ip":
+        	Log.write("Option 'ip' is not curently in function!" , 'W');
+        	break;
+        case "ab":
+        	Log.write("Option 'ab' is not curently in function!" , 'W');
+        	break;
+        case "ae":
+        	Log.write("Option 'ae' is not curently in function!" , 'W');
+        	break;
+        default:
+        	Log.write("Can't find option '" +subOptions[0]+ "'" , 'E');
+		}
+		
+		
+	}
+	
+	
 
-	public static String inverseCharAtX( String word , int x ){
+	private static String inverseCharAtX( String word , int x ){
 		int length = word.length();
 		
 		//Newline shouldn't be in string word
@@ -54,7 +112,7 @@ public class WordOptions {
 	 * Complexity N! where N is num of chars in input
 	 * Aprox memory used is: 0.09*N!/1024/1024 GB
 	 */
-	public static ArrayList<String> subsetsCharacters( String s ) {
+	private static ArrayList<String> subsetsCharacters( String s ) {
 		ArrayList<String> generatedWords = new ArrayList<String>(); 
 		int length = s.length();
 			
