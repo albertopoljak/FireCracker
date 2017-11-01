@@ -2,7 +2,7 @@ package main.methods;
 
 import main.Main;
 
-public class Placeholder {
+public class CombinatoricsPermutations {
 
 	/*
 	 * Source https://www.java-forums.org/advanced-java/81134-optimise-recursive-method-prints-all-possible-rows-2d-array.html
@@ -65,13 +65,12 @@ public class Placeholder {
 	/*
 	 * Number of generated words is N! where N is number of input words
 	 * Value size needs to be passed as a.length
-	 * Number of generated words: N! where N is number of input words
 	 * Example input {"apple","banana"} will result in: applebanana , bananaapple
 	 */
 	static void heapPermutation(String a[], int size){
 		// if size becomes 1 then save the obtained permutation
 		if (size == 1){
-			Main.writeString(a);
+			Main.writeStringToPrintWriter(a);
 			Main.test++;
 		}
 		 

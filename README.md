@@ -1,4 +1,4 @@
-# Word List Generator
+# FireCracker word list generator
 
 Create word list by combining words and permuting characters.
 Many options avaiable - program is very usefull if you know a part of the password.

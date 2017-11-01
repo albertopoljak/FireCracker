@@ -1,0 +1,6 @@
+bin/
+.classpath
+.project
+wordList.txt
+changelog.txt
+log.txt
