@@ -1,47 +1,57 @@
-package main.methods;
+package main;
 import java.awt.Color;
 import java.awt.Toolkit;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import javax.swing.JTextPane;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
-import main.Main;
+import main.methods.Helpers;
 
-public final class Log {
-	
-	private static String n = System.getProperty("line.separator");
-	private static String logPath = "log.txt";
-	private static PrintWriter logOut;
-	
-	
-	private Log(){};
+public class Logger extends JTextPane {
+
+	private String newLine = System.getProperty("line.separator");;
+	private String logFileName;
+	private PrintWriter logOut;
 	
 	
-	public static void write(String text){
+	public Logger(){
+		this.logFileName = "log.txt";
+	};
+	
+	public Logger(String logFileName){
+		this.logFileName = logFileName;
+	};
+	
+	
+	public void append(String text){
 		appendToTextPanel(text, 'I');
 		writeToFile(text);
 	}
 	
-	public static void write(String text, char color){
+	public void append(String text, char color){
 		appendToTextPanel(text, color);
 		writeToFile(text);
 	}
 	
-	public static void writeDebug(String text){
-		appendToTextPanel(text, 'D');
-		writeToFile(text);
+	public void appendDebug(String text){
+		if( Settings.chckbxDebugMode.isSelected() ){
+			appendToTextPanel(text, 'D');
+			writeToFile(text);
+		}
 	}
 	
+	public void changeSavePath(String logFileName){
+		this.logFileName = logFileName;
+	}
 	
-	private static void writeToFile(String text){
+	private void writeToFile(String text){
 		try{ 
-			openPrintWriter(logPath) ;
+			openPrintWriter(logFileName) ;
 			writeStringToFile(text);
 			closePrintWriter();
 		}catch (IOException e){
@@ -49,7 +59,7 @@ public final class Log {
 		}
 	}
 	
-	public static void openPrintWriter(String filePath) throws IOException{
+	private void openPrintWriter(String filePath) throws IOException{
 		try {
 			logOut = new PrintWriter(new BufferedWriter(new FileWriter(filePath, true)));
 		} catch (IOException e) {
@@ -57,11 +67,11 @@ public final class Log {
 		}
 	}
 
-	public static void writeStringToFile(String write){
-		logOut.print( getDate() + write + n );
+	private void writeStringToFile(String write){
+		logOut.print( Helpers.getDate() + write + newLine );
 	}	
 	
-	public static void closePrintWriter(){
+	private void closePrintWriter(){
 		if( logOut!=null )
 			logOut.close();
 	}
@@ -74,10 +84,10 @@ public final class Log {
 	 * I or anything else = INFO black
 	 * D = debug
 	 */
-	public static void appendToTextPanel(String message, char importance){
-		StyledDocument doc = Main.txtrLog.getStyledDocument();
+	public void appendToTextPanel(String message, char importance){
+		StyledDocument doc = this.getStyledDocument();
 		//String date = new SimpleDateFormat("[HH:mm:ss]   ").format(Calendar.getInstance().getTime());
-		javax.swing.text.Style style = Main.txtrLog.addStyle("I'm a Style", null);
+		javax.swing.text.Style style = this.addStyle("I'm a Style", null);
 
 		if (importance == 'I' || importance== 'S' )
 			StyleConstants.setForeground(style, Color.darkGray);
@@ -93,15 +103,11 @@ public final class Log {
 		}
 
 		try { 
-			doc.insertString(doc.getLength(), getDate() + message + n ,style); 
+			doc.insertString(doc.getLength(), Helpers.getDate() + message + newLine ,style); 
 		}catch (BadLocationException e){
-			Main.txtrLog.setText("ERROR WITH ADDING STRING TO LOG! "+e);
+			this.setText("ERROR WITH ADDING STRING TO LOG! "+e);
 		}
 	}
-	
-	
-	public static String getDate(){
-		return new SimpleDateFormat("[HH:mm:ss]   ").format(Calendar.getInstance().getTime());
-	}
 
+	
 }

@@ -3,7 +3,6 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import main.methods.Log;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JRadioButton;
@@ -31,9 +30,10 @@ public class Settings extends JFrame {
 	private static JRadioButton rdbtnIHaveLow;
 	private static JRadioButton rdbtnIHaveHigh;
 	private static JRadioButton rdbtnAutoRamDetection;
-	private JTextField txtrOptionSeparator;
+	private static JTextField txtrOptionSeparator;
 	private final  JFileChooser fileChooser;
-	private JTextField txtrWordCombinator;
+	private static JTextField txtrWordCombinator;
+	public static JCheckBox chckbxDebugMode ;
 	/*
 	 * Reserved characters represent a set of characters that can't be chosen as:
 	 * wordSeparator, wordCombine, optionSeparator and subOptionSeparator
@@ -86,6 +86,7 @@ public class Settings extends JFrame {
 		contentPane.setLayout(null);
 		
 		JButton btnKillTheMusic = new JButton("Kill the music");
+		btnKillTheMusic.setEnabled(false);
 		btnKillTheMusic.setForeground(Color.GRAY);
 		btnKillTheMusic.setBackground(Color.DARK_GRAY);
 		btnKillTheMusic.setFocusPainted(false);
@@ -100,6 +101,7 @@ public class Settings extends JFrame {
 		contentPane.add(lblPerfomanceOptions);
 		
 		rdbtnIHaveLow = new JRadioButton("Disk");
+		rdbtnIHaveLow.setEnabled(false);
 		rdbtnIHaveLow.setForeground(Color.LIGHT_GRAY);
 		rdbtnIHaveLow.setBackground(Color.DARK_GRAY);
 		rdbtnIHaveLow.setFocusPainted(false);
@@ -114,6 +116,7 @@ public class Settings extends JFrame {
 		contentPane.add(rdbtnIHaveLow);
 		
 		rdbtnIHaveHigh = new JRadioButton("RAM");
+		rdbtnIHaveHigh.setEnabled(false);
 		rdbtnIHaveHigh.setForeground(Color.LIGHT_GRAY);
 		rdbtnIHaveHigh.setBackground(Color.DARK_GRAY);
 		rdbtnIHaveHigh.setFocusPainted(false);
@@ -129,6 +132,7 @@ public class Settings extends JFrame {
 		contentPane.add(rdbtnIHaveHigh);
 		
 		rdbtnAutoRamDetection = new JRadioButton("Auto detection");
+		rdbtnAutoRamDetection.setEnabled(false);
 		rdbtnAutoRamDetection.setForeground(Color.LIGHT_GRAY);
 		rdbtnAutoRamDetection.setBackground(Color.DARK_GRAY);
 		rdbtnAutoRamDetection.setFocusPainted(false);
@@ -191,6 +195,7 @@ public class Settings extends JFrame {
 		contentPane.add(comboUpdate);
 		
 		JButton btnFreeAllMemory = new JButton("Free all memory");
+		btnFreeAllMemory.setEnabled(false);
 		btnFreeAllMemory.setBackground(Color.DARK_GRAY);
 		btnFreeAllMemory.setForeground(Color.GRAY);
 		btnFreeAllMemory.setFocusPainted(false);
@@ -200,6 +205,7 @@ public class Settings extends JFrame {
 		contentPane.add(btnFreeAllMemory);
 		
 		chckbxMeasureTimeNeeded = new JCheckBox("Measure time needed for each task");
+		chckbxMeasureTimeNeeded.setEnabled(false);
 		chckbxMeasureTimeNeeded.setBackground(Color.DARK_GRAY);
 		chckbxMeasureTimeNeeded.setForeground(Color.LIGHT_GRAY);
 		chckbxMeasureTimeNeeded.setFocusPainted(false);
@@ -238,15 +244,15 @@ public class Settings extends JFrame {
 					String newWordSeparator = String.valueOf(txtrWordSeparator.getText().charAt(0));
 					
 					if( inputContainsCharFromString( newWordSeparator, reservedCharacters ) )
-						Log.write("Can't set word separator because that character is reserved! Reserved characters are(inside the quotes, including their lowercase):" + System.getProperty("line.separator")
+						Main.txtrLog.append("Can't set word separator because that character is reserved! Reserved characters are(inside the quotes, including their lowercase):" + System.getProperty("line.separator")
 								+ "\"" + reservedCharacters + "\"" , 'W');
 					else{
 						updateReservedCharacters( String.valueOf(wordSeparator), newWordSeparator );
 						changeWordSeparator( txtrWordSeparator.getText().charAt(0) );
-						Log.write("Word separator has been changed! Note than you can use this character ONLY as word combinator. Using it in any other way (like in your words) will lead to incorrect program functionality." , 'W');
+						Main.txtrLog.append("Word separator has been changed! Note than you can use this character ONLY as word combinator. Using it in any other way (like in your words) will lead to incorrect program functionality." , 'W');
 					}
 				}else
-					Log.appendToTextPanel("Input a character first!" , 'W');
+					Main.txtrLog.appendToTextPanel("Input a character first!" , 'W');
 			}
 		});
 		btnSetWordSeparator.setFont(new Font("Tahoma", Font.PLAIN, 11));
@@ -298,18 +304,18 @@ public class Settings extends JFrame {
 					String newOptionSeparator = String.valueOf(txtrOptionSeparator.getText().charAt(0));
 					
 					if( inputContainsCharFromString( newOptionSeparator, reservedCharacters ) )
-						Log.write("Can't set option separator because that character is reserved! Reserved characters are(inside the quotes, including their lowercase):" + System.getProperty("line.separator")
+						Main.txtrLog.append("Can't set option separator because that character is reserved! Reserved characters are(inside the quotes, including their lowercase):" + System.getProperty("line.separator")
 								+ "\"" + reservedCharacters + "\"" , 'W');
 					else{
 						updateReservedCharacters( String.valueOf(optionSeparator), newOptionSeparator );
 						changeOptionSeparator( txtrOptionSeparator.getText().charAt(0) );
-						Log.write("Word separator has been changed! "
+						Main.txtrLog.append("Word separator has been changed! "
 								+ "Note than you can use this character ONLY as word separator. "
 								+ "Using it in any other way (like in your words) will lead to incorrect program functionality. "
 								+ "Also note that double word separator means option while single word separator means sub-option of previous option" , 'W');
 					}
 				}else
-					Log.appendToTextPanel("Input a character first!" , 'W');
+					Main.txtrLog.appendToTextPanel("Input a character first!" , 'W');
 			}
 		});
 		btnSetOptionSeparator.setFont(new Font("Tahoma", Font.PLAIN, 11));
@@ -353,6 +359,7 @@ public class Settings extends JFrame {
 		contentPane.add(lblPrintToLog);
 		
 		JButton btnCurrentWordsReady = new JButton("Current words ready for permutation");
+		btnCurrentWordsReady.setEnabled(false);
 		btnCurrentWordsReady.setBackground(Color.DARK_GRAY);
 		btnCurrentWordsReady.setForeground(Color.GRAY);
 		btnCurrentWordsReady.setFocusPainted(false);
@@ -361,6 +368,7 @@ public class Settings extends JFrame {
 		contentPane.add(btnCurrentWordsReady);
 		
 		JButton btnRefreshComplexityText = new JButton("Refresh complexity text");
+		btnRefreshComplexityText.setEnabled(false);
 		btnRefreshComplexityText.setBackground(Color.DARK_GRAY);
 		btnRefreshComplexityText.setForeground(Color.GRAY);
 		btnRefreshComplexityText.setFocusPainted(false);
@@ -390,15 +398,15 @@ public class Settings extends JFrame {
 					String newWordCombinator = String.valueOf(txtrWordCombinator.getText().charAt(0));
 					
 					if( inputContainsCharFromString( newWordCombinator, reservedCharacters ) )
-						Log.write("Can't set word combinator because that character is reserved! Reserved characters are(inside the quotes, including their lowercase):" + System.getProperty("line.separator")
+						Main.txtrLog.append("Can't set word combinator because that character is reserved! Reserved characters are(inside the quotes, including their lowercase):" + System.getProperty("line.separator")
 								+ "\"" + reservedCharacters + "\"" , 'W');
 					else{
 						updateReservedCharacters( String.valueOf(wordCombinator), newWordCombinator );
 						changeWordCombinator( txtrWordCombinator.getText().charAt(0) );
-						Log.write("Word combinator has been changed! Note than you can use this character ONLY as word combinator. Using it in any other way (like in your words) will lead to incorrect program functionality." , 'W');
+						Main.txtrLog.append("Word combinator has been changed! Note than you can use this character ONLY as word combinator. Using it in any other way (like in your words) will lead to incorrect program functionality." , 'W');
 					}
 				}else
-					Log.appendToTextPanel("Input a character first!" , 'W');
+					Main.txtrLog.appendToTextPanel("Input a character first!" , 'W');
 			}
 		});
 		btnSetWordCombinator.setBackground(Color.DARK_GRAY);
@@ -427,6 +435,7 @@ public class Settings extends JFrame {
 		contentPane.add(lblTheme);
 		
 		JRadioButton rdbtnDark = new JRadioButton("Dark");
+		rdbtnDark.setEnabled(false);
 		rdbtnDark.setForeground(Color.LIGHT_GRAY);
 		rdbtnDark.setBackground(Color.DARK_GRAY);
 		rdbtnDark.setFocusPainted(false);
@@ -436,6 +445,7 @@ public class Settings extends JFrame {
 		contentPane.add(rdbtnDark);
 		
 		JRadioButton rdbtnNewRadioButton = new JRadioButton("Bright");
+		rdbtnNewRadioButton.setEnabled(false);
 		rdbtnNewRadioButton.setBackground(Color.DARK_GRAY);
 		rdbtnNewRadioButton.setForeground(Color.LIGHT_GRAY);
 		rdbtnNewRadioButton.setFocusPainted(false);
@@ -454,7 +464,7 @@ public class Settings extends JFrame {
 		separator_4.setBounds(10, 175, 564, 2);
 		contentPane.add(separator_4);
 		
-		JCheckBox chckbxDebugMode = new JCheckBox("Debug mode");
+		chckbxDebugMode = new JCheckBox("Debug mode");
 		chckbxDebugMode.setToolTipText("Debug messages will appear in log");
 		chckbxDebugMode.setForeground(Color.LIGHT_GRAY);
 		chckbxDebugMode.setBackground(Color.DARK_GRAY);
@@ -481,7 +491,7 @@ public class Settings extends JFrame {
 			textFieldSavePath.setText(selectedFile.getAbsolutePath());
 			savePath = selectedFile.getAbsolutePath();
 		}else
-			Log.write("File not selected!", 'E');
+			Main.txtrLog.append("File not selected!", 'E');
 	}
 	
 	public static void changeWordSeparator(char newSeparator){

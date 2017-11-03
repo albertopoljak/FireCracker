@@ -3,12 +3,15 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import main.Help;
 
 public class Helpers {
 
+	private Helpers(){};
 	
 	/*
 	 * Returns text from file
@@ -78,6 +81,11 @@ public class Helpers {
 		  stringsAsArray[i] = aList.toArray(new String[aList.size()]);
 		}
 		return stringsAsArray;
+	}
+	
+	
+	public static String getDate(){
+		return new SimpleDateFormat("[HH:mm:ss]   ").format(Calendar.getInstance().getTime());
 	}
 	
 }
