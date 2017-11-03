@@ -1,11 +1,11 @@
 package main.methods;
-
 import main.Main;
 
 public class CombinatoricsPermutations {
-
+	
+	private CombinatoricsPermutations(){};
+	
 	/*
-	 * Source https://www.java-forums.org/advanced-java/81134-optimise-recursive-method-prints-all-possible-rows-2d-array.html
 	 * You have to pass a clean string array, with no nulls
 	 * Number of generated words: n = multiply number of words in 1D array block with each number of words from next block
 	 * Example input {{"apple","Apple"},{"banana","Banana",}} will result in: applebanana , appleBanana , Applebanana , AppleBanana
@@ -67,7 +67,7 @@ public class CombinatoricsPermutations {
 	 * Value size needs to be passed as a.length
 	 * Example input {"apple","banana"} will result in: applebanana , bananaapple
 	 */
-	static void heapPermutation(String a[], int size){
+	public static void heapPermutation(String a[], int size){
 		// if size becomes 1 then save the obtained permutation
 		if (size == 1){
 			Main.writeStringToPrintWriter(a);

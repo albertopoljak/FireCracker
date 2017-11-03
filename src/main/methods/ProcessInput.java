@@ -5,10 +5,12 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import main.Main;
+
 public class ProcessInput {
 
+	private ProcessInput(){};
 	private static String newLine = System.getProperty("line.separator");
-
 	
 	/*
 	 * Extract inputed words into ArrayList
@@ -24,7 +26,7 @@ public class ProcessInput {
 			int inputLength = input.length();
 
 			if (inputLength == 0) {
-				Log.write("Input is empty!" , 'W');
+				Main.txtrLog.append("Input is empty!" , 'W');
 				return null;
 			}
 			
@@ -37,7 +39,7 @@ public class ProcessInput {
 					if (tempWord.length()>0)
 						returnedWords.add(tempWord);
 					else
-						Log.writeDebug("Skipping empty word (you probably typed word separator twice)..." );
+						Main.txtrLog.appendDebug("Skipping empty word (you probably typed word separator twice)..." );
 					
 					tempWord = "";
 				}
@@ -47,7 +49,7 @@ public class ProcessInput {
 			if ( !compareCharAndStringForNewline( input.charAt( inputLength-1 ) , newLine) )
 				returnedWords.add(tempWord);
 			
-			Log.writeDebug("Extracted input: " + Arrays.toString(returnedWords.toArray()) );
+			Main.txtrLog.appendDebug("Extracted input: " + Arrays.toString(returnedWords.toArray()) );
 				
 			return returnedWords;
 		}
@@ -88,7 +90,7 @@ public class ProcessInput {
 
 		int count = text.length() - text.replace( String.valueOf(between), "").length();
 		if ( (count & 1) != 0 ){
-			Log.write("There can't be an odd number of '"+between+"' characters!" , 'E' );
+			Main.txtrLog.append("There can't be an odd number of '"+between+"' characters!" , 'E' );
 			return "";
 		}
 
@@ -159,10 +161,10 @@ public class ProcessInput {
 			extractWords( tempOutput, i, inputWords.get(i).toString(), combiningSeparator, optionSeparator );
 		}
 		
-		Log.writeDebug( "Base words that were extracted from input(without their options):" );
+		Main.txtrLog.appendDebug( "Base words that were extracted from input(without their options):" );
 		for( i=0; i<Y; i++){
 			for (String value : tempOutput.get(i)) {
-				Log.writeDebug( (i+1) + ":" + value );
+				Main.txtrLog.appendDebug( (i+1) + ":" + value );
 			}
 		}
 		
@@ -186,7 +188,7 @@ public class ProcessInput {
 			 * There is combining separator in string so we will break the word
 			 * in 2 parts and call this function again with each part
 			 */
-		   Log.writeDebug("Found combining separator in string: " + extractString );
+			Main.txtrLog.appendDebug("Found combining separator in string: " + extractString );
 		   String tempInput = extractString ;
 		   StringBuilder temp = new StringBuilder();
 		   for( int i=0; i<tempInput.length(); i++ ){
@@ -216,7 +218,7 @@ public class ProcessInput {
 				 */
 				baseString = extractString.substring(0, indexOption);
 				optionString = extractString.substring(indexOption);
-				inputList.get(index).add(baseString);
+
 				/*
 				 * Split option string to multiple parts then call function for every option part
 				 * We used optionSeparatorDouble because option separator is a double char in the program
@@ -225,9 +227,9 @@ public class ProcessInput {
 				String[] word = optionString.split(optionSeparatorDouble);
 				word = removeEmpty(word);
 				
-				Log.writeDebug("Printing option array for word: '" + extractString + "' in format (ID:option) :" );
+				Main.txtrLog.appendDebug("Printing option array for word: '" + extractString + "' in format (ID:option) :" );
 				for(int k =0; k<word.length;k++)
-					Log.writeDebug( k + ": " + word[k] );
+					Main.txtrLog.appendDebug( k + ": " + word[k] );
 				
 					for(String optionPart: word){
 						/*
@@ -238,15 +240,15 @@ public class ProcessInput {
 							/*
 							 * Before calling the option method first extract sub-options
 							 */
-						Log.writeDebug("Spliting:'"+optionPart+"' to suboptions!" );
+						Main.txtrLog.appendDebug("Spliting:'"+optionPart+"' to suboptions!" );
 							String[] subOptions = optionPart.split( ""+optionSeparator );
 							/*
 							 * Now remove empty words from sub-options produced by optionString.split
 							 */
 							subOptions = removeEmpty(subOptions);
-							Log.writeDebug("Printing suboptions (ID:suboption) where ID=0 means base option:" );
+							Main.txtrLog.appendDebug("Printing suboptions (ID:suboption) where ID=0 means base option:" );
 							for(int k =0; k<subOptions.length;k++)
-								Log.writeDebug(k+":"+subOptions[k] );
+								Main.txtrLog.appendDebug(k+":"+subOptions[k] );
 							/*
 							 * String in first index of finalSubOptions is the option while rest are subOptions
 							 */
@@ -259,7 +261,7 @@ public class ProcessInput {
 				/*
 				 * There are no options in word so we just add it to the list
 				 */
-				Log.writeDebug("No options in word:"+extractString );
+				Main.txtrLog.appendDebug("No options in word:"+extractString );
 				inputList.get(index).add(extractString);
 				return;
 			}

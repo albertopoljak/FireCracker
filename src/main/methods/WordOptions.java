@@ -1,9 +1,12 @@
 package main.methods;
 import java.util.ArrayList;
 import java.util.List;
+import main.Main;
 
 public class WordOptions {
 
+	private WordOptions(){};
+	
 	/*
 	 * Build options
 	 * optionString is already checked for empty in the previous method
@@ -12,7 +15,7 @@ public class WordOptions {
 	public static void extractOptions( List<List<String>> inputList , int index , String baseString, String[] subOptions ){
 		
 		if( subOptions.length==0 ) {
-			Log.write("Options have been found for word "+baseString+" but program couldn't read them!\n"
+			Main.txtrLog.append("Options have been found for word "+baseString+" but program couldn't read them!\n"
 					+ "(length!>0)" , 'W');
 			return;
 		}
@@ -24,38 +27,79 @@ public class WordOptions {
 		switch (subOptions[0]) {
         case "b":
         	if( subOptions.length>1 ){
-        		Log.write("Option 'b' can't have suboptions! ("+subOptions[1]+" etc...)" , 'E');
+        		Main.txtrLog.append("Option 'b' can't have suboptions! ("+subOptions[1]+" etc...)" , 'E');
         	}else{
-
+        		ArrayList<String> temp = subsetsCharacters(baseString);
+        		for(int i=0; i<temp.size();i++)
+        			inputList.get(index).add( temp.get(i) );
         	}
         	break;
         case "l":
         	if( subOptions.length>1 ){
-        		Log.write("Option 'l' can't have suboptions! ("+subOptions[1]+" etc...)" , 'E');
+        		Main.txtrLog.append("Option 'l' can't have suboptions! ("+subOptions[1]+" etc...)" , 'E');
         		break;
         	}else{
+        		inputList.get(index).add(baseString);
         		inputList.get(index).add( baseString.toLowerCase() );
         	}
         	break;
         case "u":
         	if( subOptions.length>1 ){
-        		Log.write("Option 'u' can't have suboptions! ("+subOptions[1]+" etc...)" , 'E');
+        		Main.txtrLog.append("Option 'u' can't have suboptions! ("+subOptions[1]+" etc...)" , 'E');
         		break;
         	}else{
+        		inputList.get(index).add(baseString);
         		inputList.get(index).add( baseString.toUpperCase() );
         	}
         	break;
         case "ip":
-        	Log.write("Option 'ip' is not curently in function!" , 'W');
+        	if( subOptions.length<=1 ){ //first index is base option 
+        		Main.txtrLog.append("Option 'ip' must have at least one suboption!" , 'E');
+        		break;
+        	}else{
+        		inputList.get(index).add(baseString);
+        		try{
+        			for(int i=1;i<subOptions.length;i++){
+        				inputList.get(index).add( inverseCharAtX( baseString, Integer.parseInt( subOptions[i] ) ) );
+        			}
+        		}catch(NumberFormatException e){
+        			Main.txtrLog.append("Suboption for option ip must be a number! "+e, 'E');
+        			break;
+        		}
+        	}
         	break;
         case "ab":
-        	Log.write("Option 'ab' is not curently in function!" , 'W');
+        	if( subOptions.length<=1 ){ //first index is base option {
+        		Main.txtrLog.append("Option 'ab' must have at least one suboption!" , 'E');
+        		break;
+        	}
+        	else if(baseString.length()<1){
+        		Main.txtrLog.append("There is no base string for option 'ab'!" , 'E');
+        		break;	
+        	}else{
+        		inputList.get(index).add(baseString);
+        		for(int i=1;i<subOptions.length;i++){
+        			inputList.get(index).add( subOptions[i] + baseString );
+        		}
+			}
         	break;
         case "ae":
-        	Log.write("Option 'ae' is not curently in function!" , 'W');
+        	if( subOptions.length<=1 ){ //first index is base option {
+        		Main.txtrLog.append("Option 'ae' must have at least one suboption!" , 'E');
+        		break;
+        	}
+        	else if(baseString.length()<1){
+        		Main.txtrLog.append("There is no base string for option 'ae'!" , 'E');
+        		break;	
+        	}else{
+        		inputList.get(index).add(baseString);
+        		for(int i=1;i<subOptions.length;i++){
+        			inputList.get(index).add( baseString + subOptions[i] );
+        		}
+			}
         	break;
         default:
-        	Log.write("Can't find option '" +subOptions[0]+ "'" , 'E');
+        	Main.txtrLog.append("Can't find option '" +subOptions[0]+ "'" , 'E');
 		}
 		
 		
@@ -79,10 +123,10 @@ public class WordOptions {
 				//Returned null to avoid duplicates in case of first char being a number 
 				//It's expected that this method will return a different string but if number is first it will return the same string(that's why return null)
 		}else if( x<1 ){
-			Log.write("X has to be higher that 0!", 'E');
+			Main.txtrLog.append("X has to be higher that 0!", 'E');
 			return null;
 		}else{
-			Log.write("Can't use function \\ip"+x+" , not that much chars in word!", 'E');
+			Main.txtrLog.append("Can't use function \\ip"+x+" , not that much chars in word or the word is empty!", 'E');
 			return null;
 		}
 	}
@@ -117,7 +161,7 @@ public class WordOptions {
 		int length = s.length();
 			
 		if( length>12 ){
-			Log.write("Word length is larger then 10!", 'E');
+			Main.txtrLog.append("Word length is larger then 10!", 'E');
 		}else{
 			char[] a = new char[length];
 			for (int i = 0; i < length; i++)

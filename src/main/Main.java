@@ -3,10 +3,8 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.JTextPane;
 import main.methods.CombinatoricsPermutations;
 import main.methods.Helpers;
-import main.methods.Log;
 import main.methods.ProcessInput;
 import java.awt.BorderLayout;
 import java.awt.Font;
@@ -29,7 +27,7 @@ public class Main {
 	private static JFrame frmDecypherInStyle;
 	private static Settings windowSettings;
 	private static JTextArea txtWords;
-	public static JTextPane txtrLog;
+	public static Logger txtrLog;
 	private static JLabel textCurrentMemUsage;
 	private static PrintWriter out;
 	private static Timer timer;
@@ -86,7 +84,7 @@ public class Main {
 			txtEnter.setOpaque(false);
 			frmDecypherInStyle.getContentPane().add(txtEnter);
 			
-			txtrLog = new JTextPane();
+			txtrLog = new Logger();
 			txtrLog.setEditable(false);
 			txtrLog.setBackground(Color.GRAY);
 			txtrLog.setText("Log:\n");
@@ -106,7 +104,7 @@ public class Main {
 			btnGetSavePath.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseReleased(MouseEvent e) {
-					Log.write("Save path location:\n"+Settings.savePath , 'I');
+					txtrLog.append("Save path location:\n"+Settings.savePath , 'I');
 				}
 			});
 			btnGetSavePath.setBounds(624, 390, 140, 23);
@@ -181,11 +179,12 @@ public class Main {
 						tempOutput = ProcessInput.buildWords( ProcessInput.extractInput(txtWords.getText() , Settings.wordSeparator), Settings.wordCombinator , Settings.optionSeparator ) ;
 						CombinatoricsPermutations.combinations2D( Helpers.convertListToStringArray(tempOutput) );
 						closePrintWriter();
-						Log.appendToTextPanel("Test: "+test, 'I');
+						txtrLog.appendToTextPanel("Finished!" , 'G');
+						txtrLog.appendToTextPanel("Test: "+test, 'I');
 						test=0;
 						
 					}catch(Exception exc){
-						Log.write("Error: "+exc , 'E');
+						txtrLog.append("Error: "+exc , 'E');
 					}
 				}
 			});
@@ -307,7 +306,7 @@ public class Main {
 		try {
 			out = new PrintWriter(new BufferedWriter(new FileWriter(filePath, true)));
 		} catch (IOException e) {
-			Log.appendToTextPanel("Error creating file for saving!\n"+e , 'E');
+			txtrLog.appendToTextPanel("Error creating file for saving!\n"+e , 'E');
 			throw new IOException(e);
 		}
 	}
@@ -330,10 +329,10 @@ public class Main {
 	 */
 	public static void autoMemoryDetection(){
 		long maxMemory = getMaxMemoryUsage();
-		Log.write("Max memory: " + maxMemory + "mb");
+		txtrLog.append("Max memory: " + maxMemory + "mb");
 		if(maxMemory<2000){
 			Settings.lowMemory = true;
-			Log.write("Program is set to run on low memory (less that 2000mb).\n"
+			txtrLog.append("Program is set to run on low memory (less that 2000mb).\n"
 					+ "This will affect program execution time but will reduce memory usage.\n"
 					+ "If the memory reduction is not enough and the program eats all the memory it will crash.\n"
 					+ "Run in 64bits to increase avaiable memory size (works only if you have more than 2gb RAM)");
