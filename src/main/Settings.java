@@ -86,6 +86,7 @@ public class Settings extends JFrame {
 		contentPane.setLayout(null);
 		
 		JButton btnKillTheMusic = new JButton("Kill the music");
+		btnKillTheMusic.setEnabled(false);
 		btnKillTheMusic.setForeground(Color.GRAY);
 		btnKillTheMusic.setBackground(Color.DARK_GRAY);
 		btnKillTheMusic.setFocusPainted(false);
@@ -100,6 +101,7 @@ public class Settings extends JFrame {
 		contentPane.add(lblPerfomanceOptions);
 		
 		rdbtnIHaveLow = new JRadioButton("Disk");
+		rdbtnIHaveLow.setEnabled(false);
 		rdbtnIHaveLow.setForeground(Color.LIGHT_GRAY);
 		rdbtnIHaveLow.setBackground(Color.DARK_GRAY);
 		rdbtnIHaveLow.setFocusPainted(false);
@@ -114,6 +116,7 @@ public class Settings extends JFrame {
 		contentPane.add(rdbtnIHaveLow);
 		
 		rdbtnIHaveHigh = new JRadioButton("RAM");
+		rdbtnIHaveHigh.setEnabled(false);
 		rdbtnIHaveHigh.setForeground(Color.LIGHT_GRAY);
 		rdbtnIHaveHigh.setBackground(Color.DARK_GRAY);
 		rdbtnIHaveHigh.setFocusPainted(false);
@@ -129,6 +132,7 @@ public class Settings extends JFrame {
 		contentPane.add(rdbtnIHaveHigh);
 		
 		rdbtnAutoRamDetection = new JRadioButton("Auto detection");
+		rdbtnAutoRamDetection.setEnabled(false);
 		rdbtnAutoRamDetection.setForeground(Color.LIGHT_GRAY);
 		rdbtnAutoRamDetection.setBackground(Color.DARK_GRAY);
 		rdbtnAutoRamDetection.setFocusPainted(false);
@@ -191,6 +195,7 @@ public class Settings extends JFrame {
 		contentPane.add(comboUpdate);
 		
 		JButton btnFreeAllMemory = new JButton("Free all memory");
+		btnFreeAllMemory.setEnabled(false);
 		btnFreeAllMemory.setBackground(Color.DARK_GRAY);
 		btnFreeAllMemory.setForeground(Color.GRAY);
 		btnFreeAllMemory.setFocusPainted(false);
@@ -200,6 +205,7 @@ public class Settings extends JFrame {
 		contentPane.add(btnFreeAllMemory);
 		
 		chckbxMeasureTimeNeeded = new JCheckBox("Measure time needed for each task");
+		chckbxMeasureTimeNeeded.setEnabled(false);
 		chckbxMeasureTimeNeeded.setBackground(Color.DARK_GRAY);
 		chckbxMeasureTimeNeeded.setForeground(Color.LIGHT_GRAY);
 		chckbxMeasureTimeNeeded.setFocusPainted(false);
@@ -353,6 +359,7 @@ public class Settings extends JFrame {
 		contentPane.add(lblPrintToLog);
 		
 		JButton btnCurrentWordsReady = new JButton("Current words ready for permutation");
+		btnCurrentWordsReady.setEnabled(false);
 		btnCurrentWordsReady.setBackground(Color.DARK_GRAY);
 		btnCurrentWordsReady.setForeground(Color.GRAY);
 		btnCurrentWordsReady.setFocusPainted(false);
@@ -361,6 +368,7 @@ public class Settings extends JFrame {
 		contentPane.add(btnCurrentWordsReady);
 		
 		JButton btnRefreshComplexityText = new JButton("Refresh complexity text");
+		btnRefreshComplexityText.setEnabled(false);
 		btnRefreshComplexityText.setBackground(Color.DARK_GRAY);
 		btnRefreshComplexityText.setForeground(Color.GRAY);
 		btnRefreshComplexityText.setFocusPainted(false);
@@ -427,6 +435,7 @@ public class Settings extends JFrame {
 		contentPane.add(lblTheme);
 		
 		JRadioButton rdbtnDark = new JRadioButton("Dark");
+		rdbtnDark.setEnabled(false);
 		rdbtnDark.setForeground(Color.LIGHT_GRAY);
 		rdbtnDark.setBackground(Color.DARK_GRAY);
 		rdbtnDark.setFocusPainted(false);
@@ -436,6 +445,7 @@ public class Settings extends JFrame {
 		contentPane.add(rdbtnDark);
 		
 		JRadioButton rdbtnNewRadioButton = new JRadioButton("Bright");
+		rdbtnNewRadioButton.setEnabled(false);
 		rdbtnNewRadioButton.setBackground(Color.DARK_GRAY);
 		rdbtnNewRadioButton.setForeground(Color.LIGHT_GRAY);
 		rdbtnNewRadioButton.setFocusPainted(false);

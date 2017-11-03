@@ -225,7 +225,7 @@ public class Main {
 			lblAlgorithmComplexity.setBounds(14, 208, 110, 14);
 			frmDecypherInStyle.getContentPane().add(lblAlgorithmComplexity);
 			
-			JLabel txtComplexity = new JLabel("Very High: O(N!*2N+300*N^2)");
+			JLabel txtComplexity = new JLabel("Not working, to do in following updates");
 			txtComplexity.setForeground(Color.LIGHT_GRAY);
 			txtComplexity.setFont(new Font("Monospaced", Font.PLAIN, 14));
 			txtComplexity.setBounds(124, 204, 640, 25);
@@ -244,6 +244,7 @@ public class Main {
 			frmDecypherInStyle.getContentPane().add(txtEstimatedMemUsage);
 			
 			JButton btnRefreshVariables = new JButton("Refresh variables");
+			btnRefreshVariables.setEnabled(false);
 			btnRefreshVariables.setBackground(Color.DARK_GRAY);
 			btnRefreshVariables.setForeground(Color.GRAY);
 			btnRefreshVariables.setFocusPainted(false);
