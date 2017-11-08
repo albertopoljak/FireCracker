@@ -26,7 +26,7 @@ public class Main {
 	//Basic elements
 	private static JFrame frmDecypherInStyle;
 	private static Settings windowSettings;
-	private static JTextArea txtWords;
+	private static InputConsole txtWords;
 	public static Logger txtrLog;
 	private static JLabel textCurrentMemUsage;
 	private static PrintWriter out;
@@ -115,12 +115,11 @@ public class Main {
 			frmDecypherInStyle.getContentPane().add(scrollPane);	
 			
 		//Add JTextArea for inputting words
-			txtWords = new JTextArea();
+			txtWords = new InputConsole();
 			txtWords.setForeground(Color.BLACK);
 			txtWords.setBackground(Color.LIGHT_GRAY);
 			scrollPane.setViewportView(txtWords);
 			txtWords.setFont(new Font("Monospaced", Font.PLAIN, 12));
-			txtWords.setLineWrap(true);
 			txtWords.setToolTipText("");	
 			
 			JButton btnClearWords = new JButton("Clear Words");
@@ -176,7 +175,7 @@ public class Main {
 					try{
 						openPrintWriter("wordList.txt");
 						List<List<String>> tempOutput = new ArrayList<List<String>>();
-						tempOutput = ProcessInput.buildWords( ProcessInput.extractInput(txtWords.getText() , Settings.wordSeparator), Settings.wordCombinator , Settings.optionSeparator ) ;
+						tempOutput = ProcessInput.buildWords( txtWords.extractInput(txtWords.getText() , Settings.wordSeparator), Settings.wordCombinator , Settings.optionSeparator ) ;
 						CombinatoricsPermutations.combinations2D( Helpers.convertListToStringArray(tempOutput) );
 						closePrintWriter();
 						txtrLog.appendToTextPanel("Finished!" , 'G');
