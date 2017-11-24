@@ -28,6 +28,7 @@ public class Main {
 	private static Settings windowSettings;
 	private static InputConsole txtWords;
 	public static Logger txtrLog;
+	public static JLabel txtComplexity;
 	private static JLabel textCurrentMemUsage;
 	private static PrintWriter out;
 	private static Timer timer;
@@ -175,7 +176,7 @@ public class Main {
 					try{
 						openPrintWriter("wordList.txt");
 						List<List<String>> tempOutput = new ArrayList<List<String>>();
-						tempOutput = ProcessInput.buildWords( txtWords.extractInput(txtWords.getText() , Settings.wordSeparator), Settings.wordCombinator , Settings.optionSeparator ) ;
+						tempOutput = ProcessInput.buildWords( txtWords.extractInput(txtWords.getText() , Settings.wordSeparator) ) ;
 						CombinatoricsPermutations.combinations2D( Helpers.convertListToStringArray(tempOutput) );
 						closePrintWriter();
 						txtrLog.appendToTextPanel("Finished!" , 'G');
@@ -192,10 +193,10 @@ public class Main {
 			
 			JLabel txtrOptions = new JLabel();
 			txtrOptions.setForeground(Color.LIGHT_GRAY);
-			txtrOptions.setText("Universal options:");
+			txtrOptions.setText("Post-process options:");
 			txtrOptions.setOpaque(false);
 			txtrOptions.setFont(new Font("Tahoma", Font.PLAIN, 11));
-			txtrOptions.setBounds(14, 179, 100, 18);
+			txtrOptions.setBounds(14, 179, 120, 18);
 			frmDecypherInStyle.getContentPane().add(txtrOptions);
 			
 			JLabel lblMemoryUsage = new JLabel("Current RAM usage:");
@@ -215,7 +216,7 @@ public class Main {
 			txtrT.setBackground(Color.LIGHT_GRAY);
 			txtrT.setToolTipText("Example: \\\\sbc\"1234567890AAa\" \\\\sec\"1234567890AAa\"");
 			txtrT.setFont(new Font("Monospaced", Font.PLAIN, 12));
-			txtrT.setBounds(124, 179, 640, 22);
+			txtrT.setBounds(134, 179, 630, 22);
 			frmDecypherInStyle.getContentPane().add(txtrT);
 			
 			JLabel lblAlgorithmComplexity = new JLabel("Algorithm complexity:");
@@ -224,10 +225,16 @@ public class Main {
 			lblAlgorithmComplexity.setBounds(14, 208, 110, 14);
 			frmDecypherInStyle.getContentPane().add(lblAlgorithmComplexity);
 			
-			JLabel txtComplexity = new JLabel("Not working, to do in following updates");
+			txtComplexity = new JLabel("Click to refresh or click \"Refresh variables\"");
+			txtComplexity.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseReleased(MouseEvent arg0) {
+					updateComplexityText();
+				}
+			});
 			txtComplexity.setForeground(Color.LIGHT_GRAY);
 			txtComplexity.setFont(new Font("Monospaced", Font.PLAIN, 14));
-			txtComplexity.setBounds(124, 204, 640, 25);
+			txtComplexity.setBounds(134, 204, 630, 25);
 			frmDecypherInStyle.getContentPane().add(txtComplexity);
 			
 			JLabel lblEstimatedMemoryUsage = new JLabel("Estimated filesize on disk:");
@@ -243,7 +250,6 @@ public class Main {
 			frmDecypherInStyle.getContentPane().add(txtEstimatedMemUsage);
 			
 			JButton btnRefreshVariables = new JButton("Refresh variables");
-			btnRefreshVariables.setEnabled(false);
 			btnRefreshVariables.setBackground(Color.DARK_GRAY);
 			btnRefreshVariables.setForeground(Color.GRAY);
 			btnRefreshVariables.setFocusPainted(false);
@@ -251,6 +257,8 @@ public class Main {
 				@Override
 				public void mouseReleased(MouseEvent arg0) {
 					textCurrentMemUsage.setText("MB: " + getMemoryUsage());	
+					updateComplexityText();
+					
 				}
 			});
 			btnRefreshVariables.setFont(new Font("Tahoma", Font.PLAIN, 11));
@@ -338,6 +346,18 @@ public class Main {
 					+ "Run in 64bits to increase avaiable memory size (works only if you have more than 2gb RAM)");
 		}else
 			Settings.lowMemory = false;
+	}
+	
+	
+	public static void updateComplexityText(){
+		try{
+			List<List<String>> tempOutput = new ArrayList<List<String>>();
+			tempOutput = ProcessInput.buildWords( txtWords.extractInput(txtWords.getText() , Settings.wordSeparator) ) ;
+			long tempCount = Helpers.totalExpectedGeneratedWords(tempOutput);
+			txtComplexity.setText( Helpers.getAlgorithmComplexityString(tempCount) + "     Words:" + tempCount );
+		}catch(Exception exc){
+			txtrLog.append("Can't update algorithm complexity text, error: "+exc , 'E');
+		}
 	}
 	
 	

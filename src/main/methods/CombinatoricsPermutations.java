@@ -6,8 +6,8 @@ public class CombinatoricsPermutations {
 	private CombinatoricsPermutations(){};
 	
 	/*
-	 * You have to pass a clean string array, with no nulls
-	 * Number of generated words: n = multiply number of words in 1D array block with each number of words from next block
+	 * Method requires a clean string array (with no nulls)
+	 * Number of generated words: multiply number of words in 1D array block with each number of words from next block
 	 * Example input {{"apple","Apple"},{"banana","Banana",}} will result in: applebanana , appleBanana , Applebanana , AppleBanana
 	 */
 	public static void combinations2D(String [][] g) {

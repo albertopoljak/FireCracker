@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import main.Help;
+import main.Main;
 
 public class Helpers {
 
@@ -74,7 +75,6 @@ public class Helpers {
 	 */
 	
 	public static String[][] convertListToStringArray( List<List<String>> theStrings ){
-		//List<List<String>> theStrings ... coming from somewhere
 		String[][] stringsAsArray = new String[theStrings.size()][];
 		for (int i=0; i<theStrings.size();i++) {
 		  List<String> aList = theStrings.get(i);
@@ -82,6 +82,50 @@ public class Helpers {
 		}
 		return stringsAsArray;
 	}
+	
+	
+	public static long totalNumOfElementsIn2DList( List<List<String>> input, int rows ){
+		long counter = 0;
+		for( int i=0; i<rows; i++)
+			counter+=input.get(i).size();
+		return counter;
+	}
+	
+	
+	public static long factorial( long n ){
+		if(n==0)
+			return 1;
+		else return (n*factorial(n-1));
+		
+	}
+	
+	
+	public static long totalExpectedGeneratedWords( List<List<String>> input ){
+		long multiplier = 1;
+		int rows = input.size();
+		for( int i=0; i<rows; i++){
+			multiplier*=input.get(i).size();
+		}
+		return factorial(rows)*multiplier;
+	}
+	
+	
+	public static String getAlgorithmComplexityString( long totalWords ){
+		if( totalWords<100000 )
+			return "Very low";
+		else if( totalWords<5000000 )
+			return "Low";
+		else if( totalWords<50000000 )
+			return "Medium";
+		else if( totalWords<500000000 )
+			return "High";
+		else if( totalWords<1000000000 )
+			return "Very High";
+		else
+			return "Almost Impossible!";
+	}
+	
+	
 	
 	
 	public static String getDate(){

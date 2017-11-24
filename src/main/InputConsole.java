@@ -30,7 +30,7 @@ public class InputConsole extends JTextPane {
 			
 			for (int i=0; i<inputLength; i++) {
 				currentChar = input.charAt(i);
-				if (currentChar!=wordSeparator && !compareCharAndStringForNewline(currentChar, newLine) )
+				if (currentChar!=wordSeparator && !compareCharForNewline(currentChar, newLine) )
 					tempWord+=input.charAt(i);
 				else{
 					if (tempWord.length()>0)
@@ -43,7 +43,7 @@ public class InputConsole extends JTextPane {
 			}
 			
 			//Add last word if there is NO newline at the end
-			if ( !compareCharAndStringForNewline( input.charAt( inputLength-1 ) , newLine) )
+			if ( !compareCharForNewline( input.charAt( inputLength-1 ) , newLine) )
 				returnedWords.add(tempWord);
 			
 			Main.txtrLog.appendDebug("Extracted input: " + Arrays.toString(returnedWords.toArray()) );
@@ -51,7 +51,7 @@ public class InputConsole extends JTextPane {
 			return returnedWords;
 		}
 		
-		private boolean compareCharAndStringForNewline( char charInput , String stringInput ){
+		private boolean compareCharForNewline( char charInput , String stringInput ){
 			String temp = Character.toString(charInput);
 			//Check if contains because newline(stringInput) can be 2 chars (on windows \r\n)
 			if ( stringInput.contains(temp)){
@@ -62,6 +62,7 @@ public class InputConsole extends JTextPane {
 		}
 		
 		
+		
 		/*
 		 * Returns a string of all characters that are between char 'between'
 		 * Example input is: word\\ab"prefix" ,and between is '"'
@@ -70,7 +71,7 @@ public class InputConsole extends JTextPane {
 		 * If char between doesn't exist it returns empty string ""
 		 * If there is an odd number of chars between it returns empty string ""
 		 */
-		public static String getCharactersFromOptionsS(String text, char between){
+		public static String getCharactersFromOptions(String text, char between){
 			int i;
 			int j;
 			String temp = "";
