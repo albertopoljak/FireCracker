@@ -118,7 +118,7 @@ This would generate: lovejesus , jesuslove , loveJesus , Jesuslove , loveicecrea
 
 
 
-f) Universal options
+f) Post-process options
 These options only apply to ALREADY generated words.
 
 --sb-%S 	Add specific string %S at beginning of each generated word example:
@@ -158,9 +158,9 @@ TO DO
 SECTION 3: Explained complexity chart
 
 Word count			Complexity
-					Impossible
-					Very high
-					High
-					Medium
-					Low
-					Very low			
+>1000000000			Impossible
+<1000000000			Very high
+<500000000			High
+<50000000			Medium
+<5000000			Low
+<100000				Very low			
